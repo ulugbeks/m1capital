@@ -1,0 +1,352 @@
+/* ============================  GENERAL  ============================ */
+.header__title,
+.header__subtitle,
+.solutions-button,
+.header__note {
+    animation-delay: 3.3s;
+}
+
+@keyframes openFrame {
+    from {
+        bottom: -48vh
+    }
+
+    50% {
+        bottom: 26vh;
+        width: 40vw;
+        transform: scale(1);
+    }
+
+    99% {
+        bottom: 26vh;
+        transform: scale(2.7, 2.3);
+    }
+
+    to {
+        display: none;
+        bottom: 26vh;
+        transform: scale(2.7, 2.3);
+    }
+}
+
+@keyframes toRight {
+    0% {
+        transform: scaleX(0)
+    }
+
+    100% {
+        transform: scaleX(1)
+    }
+}
+
+/* =============================  HEADER  ============================ */
+header {
+    min-height: 100svh;
+}
+
+.header__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+}
+
+.header__title,
+.header__subtitle,
+.header__note,
+.header__note i {
+    color: var(--color-bg);
+}
+
+/* =========================  FUTURE-PROOF  ========================== */
+.future-proof {
+    margin: 108px 0 180px;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 120px;
+    padding: 0 60px;
+}
+
+.future-proof__img {
+    width: 24vw;
+    border-radius: 8px
+}
+
+.future-proof__title {
+    font-size: var(--fs-h3);
+    max-width: 52vw;
+    font-weight: 400
+}
+
+/* ===========================  SOLUTIONS  =========================== */
+.solutions {
+    padding: 0 60px
+}
+
+.solutions__title {
+    font-size: var(--fs-body);
+    font-weight: 400;
+    margin-bottom: 48px
+}
+
+.solutions__items {
+    display: flex;
+    flex-direction: column
+}
+
+.solution {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    transition: var(--tr-base);
+    z-index: 2;
+}
+
+.solution::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: var(--tr-base);
+    z-index: -1;
+}
+
+.solution:hover {
+    padding: 40px 20px
+}
+
+.solution:hover::before {
+    transform: scaleY(1)
+}
+
+.solution__left * {
+    font-size: var(--fs-h2);
+    font-weight: 400
+}
+
+.solution__text {
+    position: absolute;
+    left: 25%
+}
+
+.solution i {
+    font-size: 40px
+}
+
+/* =============================  HELP  ============================== */
+.help {
+    height: 92vh;
+    margin: 240px 0;
+    padding: 0 60px;
+    display: flex;
+    gap: 8vw;
+    align-items: center;
+}
+
+.help__slider {
+    min-width: 50%;
+    height: 100%;
+    max-width: 600px;
+    max-height: 800px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 60px -20px rgba(0, 0, 0, .2);
+}
+
+.help__slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transform: scale(0);
+    opacity: 0;
+    transition: var(--tr-base);
+}
+
+.help__slide.active {
+    z-index: 2;
+    transform: scale(1);
+    opacity: 1
+}
+
+.help__info {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 40px;
+    position: relative
+}
+
+.help__title {
+    font-size: var(--fs-body);
+    font-weight: 400;
+    margin-bottom: 88px
+}
+
+.help__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-help-links)
+}
+
+.help__link {
+    font-size: 60px;
+    font-weight: 400;
+    color: var(--color-disabled);
+    position: relative;
+    width: max-content;
+    cursor: pointer;
+    transition: .6s cubic-bezier(.23, 1, .32, 1);
+}
+
+.help__link::before {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--color-fg);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .75s cubic-bezier(.19, 1, .22, 1), background .75s cubic-bezier(.19, 1, .22, 1);
+}
+
+.help__link:hover,
+.help__link.active {
+    color: var(--color-fg)
+}
+
+.help__link:hover::before,
+.help__link.active::before {
+    transform: scaleX(1);
+    transform-origin: left
+}
+
+.help__link.animation::before {
+    background: var(--color-disabled) !important
+}
+
+.help__link.animation::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--color-fg);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: toRight 5s linear;
+}
+
+.help__description {
+    position: absolute;
+    left: 0;
+    bottom: 40px
+}
+
+.help__description.disabled .help__subtitle,
+.help__description.disabled .help__text {
+    transform: translateY(-30%);
+    opacity: 0
+}
+
+.help__description.new .help__subtitle,
+.help__description.new .help__text {
+    transition: none !important;
+    transform: translateY(30%);
+    opacity: 0
+}
+
+/* ==========================  SOLUTIONS-AD  ========================= */
+.solutions-ad {
+    background: url('/assets/index/solutions-ad.png') center/cover fixed no-repeat;
+    width: 98vw;
+    height: 90vh;
+    margin: 0 auto;
+    border-radius: 16px;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding: 60px 52px;
+}
+
+.solutions-ad__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%
+}
+
+.solutions-ad__title {
+    font-size: var(--fs-h3);
+    font-weight: 400;
+    color: var(--color-bg)
+}
+
+/* ============================  PRODUCTS  =========================== */
+.products {
+    margin: 200px 0
+}
+
+
+/* ============================ PARTNERS =========================== */
+.partners__slider {
+    display: flex;
+    flex-direction: row;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+}
+
+.partners__slider .partner {
+    position: relative;
+    width: 600px;
+    height: 440px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.partner__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.partner__logo-wrapper {
+    position: absolute;
+    z-index: 2;
+    overflow: hidden;
+    background-color: var(--color-bg);
+    bottom: 32px;
+    left: 32px;
+    padding: 24px;
+    height: 24%;
+    width: 48%;
+    border-radius: 12px;
+}
+
+.partner__logo {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+.partners__info {
+    margin-top: 80px;
+}

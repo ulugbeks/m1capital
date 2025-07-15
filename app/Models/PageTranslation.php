@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class PageTranslation extends Model
+{
+    protected $fillable = [
+        'title',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'hero_title',
+        'hero_subtitle',
+        'content'
+    ];
+
+    protected $casts = [
+        'content' => 'array'
+    ];
+
+    public function setContentAttribute($value)
+    {
+        $this->attributes['content'] = is_array($value) ? json_encode($value) : $value;
+    }
+
+    public function getContentAttribute($value)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+}
