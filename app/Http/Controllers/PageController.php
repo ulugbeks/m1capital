@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\Product;
+use App\Models\Partner;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -21,16 +23,26 @@ class PageController extends Controller
         
         // Для страницы About загружаем дополнительные данные
         if ($page->slug === 'about') {
-            $teamMembers = \App\Models\TeamMember::active()->ordered()->get();
-            $partners = \App\Models\Partner::active()->ordered()->get();
+            $partners = Partner::active()->ordered()->get();
             
-            return view($template, compact('page', 'teamMembers', 'partners'));
+            // Группируем партнеров по категориям для страницы About
+            $partnersData = [];
+            foreach ($partners->groupBy('category') as $category => $categoryPartners) {
+                $partnersData[$category] = $categoryPartners->map(function($partner) {
+                    return [
+                        'name' => $partner->name,
+                        'logo' => asset('storage/' . $partner->logo)
+                    ];
+                })->toArray();
+            }
+            
+            return view($template, compact('page', 'partners', 'partnersData'));
         }
         
         return view($template, compact('page'));
     }
 
-    public function solutions()
+    public function solutions($locale)
     {
         $page = Page::where('slug', 'solutions')->firstOrFail();
         $solutions = Page::where('type', 'solution')->active()->ordered()->get();
@@ -38,13 +50,21 @@ class PageController extends Controller
         return view('pages.solutions', compact('page', 'solutions'));
     }
 
-    public function solution($slug)
+    public function solution($locale, $slug)
     {
         $solution = Page::where('slug', $slug)
                        ->where('type', 'solution')
                        ->active()
                        ->firstOrFail();
         
-        return view('pages.solution', compact('solution'));
+        // Загружаем продукты для этой страницы решения
+        $products = Product::active()
+                          ->whereHas('pages', function($query) use ($solution) {
+                              $query->where('page_id', $solution->id);
+                          })
+                          ->ordered()
+                          ->get();
+        
+        return view('pages.solution', compact('solution', 'products'));
     }
 }

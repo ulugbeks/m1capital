@@ -29,11 +29,15 @@
     <section class="solutions">
         <p class="solutions__title">{{ __('Charging solutions for') }}</p>
         <div class="solutions__items">
-            @foreach($content['solutions'] ?? [] as $index => $solution)
-            <a href="{{ route('solution', ['locale' => app()->getLocale(), 'slug' => $solution['slug'] ?? '']) }}" class="solution">
+            @php
+                // Получаем страницы решений из базы данных
+                $solutionPages = \App\Models\Page::where('type', 'solution')->active()->ordered()->get();
+            @endphp
+            @foreach($solutionPages as $index => $solution)
+            <a href="{{ route('solution', ['locale' => app()->getLocale(), 'slug' => $solution->slug]) }}" class="solution">
                 <div class="solution__left">
                     <span class="solution__number">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                    <span class="solution__text">{{ $solution['title'] ?? '' }}</span>
+                    <span class="solution__text">{{ $solution->title }}</span>
                 </div>
                 <i class="fas fa-arrow-right"></i>
             </a>
@@ -110,7 +114,7 @@
             </div>
         </div>
         <div class="section-grid partners__info">
-            <p>{{ __('Drag slider') }}</p>
+            <p>{{ $content['partners']['drag_text'] ?? 'Drag slider' }}</p>
             <div class="partners__description">
                 <p class="section-subtitle">{{ $content['partners']['description_subtitle'] ?? 'EV charging solutions for residential sites and businesses' }}</p>
                 <p class="section-text">{{ $content['partners']['description_text'] ?? '' }}</p>
@@ -122,7 +126,7 @@
         <h2 class="get-started__title">{!! $content['get_started']['title'] ?? 'Ready to get <br> started?' !!}</h2>
         <button class="circleBg-btn get-started__button">
             <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
-                <span>{{ __('Contact us') }}</span>
+                <span>{{ $content['get_started']['button_text'] ?? 'Contact us' }}</span>
                 <div class="_i_bg"></div>
                 <i class="fa-solid fa-arrow-right"></i>
             </a>

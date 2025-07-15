@@ -47,13 +47,28 @@
         </div>
         <div class="nav__actions">
             <div class="language-switcher">
-                @foreach(config('app.available_locales', ['en', 'lv']) as $locale)
-                    @if($locale !== app()->getLocale())
-                        <a href="{{ url($locale . '/' . (request()->segment(2) ?? '')) }}" class="lang-link">
-                            {{ strtoupper($locale) }}
-                        </a>
-                    @endif
-                @endforeach
+                @php
+                    $currentLocale = app()->getLocale();
+                    $availableLocales = config('app.available_locales', ['en', 'lv']);
+                    $currentRoute = request()->route()->getName();
+                    $currentParams = request()->route()->parameters();
+                    unset($currentParams['locale']);
+                @endphp
+                <div class="language-dropdown">
+                    <button class="language-current">
+                        {{ strtoupper($currentLocale) }}
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="language-options">
+                        @foreach($availableLocales as $locale)
+                            @if($locale !== $currentLocale)
+                                <a href="{{ route($currentRoute, array_merge(['locale' => $locale], $currentParams)) }}" class="language-option">
+                                    {{ strtoupper($locale) }}
+                                </a>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
             </div>
             <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}" class="button arrow-btn">
                 <span>{{ __('Contact') }}</span>

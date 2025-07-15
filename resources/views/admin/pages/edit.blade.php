@@ -62,7 +62,7 @@
                                       class="w-full border-gray-300 rounded-md shadow-sm">{{ old('meta_description.'.$locale, $page->translate($locale)->meta_description ?? '') }}</textarea>
                         </div>
                         
-                        <div class="mb-4">
+                        <!-- <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Meta Keywords
                             </label>
@@ -70,8 +70,8 @@
                                    name="meta_keywords[{{ $locale }}]" 
                                    value="{{ old('meta_keywords.'.$locale, $page->translate($locale)->meta_keywords ?? '') }}"
                                    class="w-full border-gray-300 rounded-md shadow-sm">
-                        </div>
-                        
+                        </div> -->
+                        <hr class="mb-4" style="border: 2px solid #333;">
                         @php
                             $content = $page->translate($locale)->content ?? [];
                         @endphp
@@ -109,43 +109,6 @@
                                 <textarea name="content[{{ $locale }}][future_proof][title]" 
                                           rows="2"
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.future_proof.title', $content['future_proof']['title'] ?? '') }}</textarea>
-                            </div>
-                            
-                            <!-- Solutions Section -->
-                            <div class="mb-4 p-4 bg-gray-50 rounded">
-                                <h5 class="font-medium mb-2">Solutions Section</h5>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Section Title
-                                </label>
-                                <input type="text" 
-                                       name="content[{{ $locale }}][solutions_section][title]" 
-                                       value="{{ old('content.'.$locale.'.solutions_section.title', $content['solutions_section']['title'] ?? 'Charging solutions for') }}"
-                                       class="w-full border-gray-300 rounded-md shadow-sm mb-4">
-                                
-                                @php
-                                    $solutions = [
-                                        ['key' => 'energy-storage', 'default' => 'Energy storage'],
-                                        ['key' => 'energy-trading', 'default' => 'Energy trading'],
-                                        ['key' => 'fcr', 'default' => 'FCR'],
-                                        ['key' => 'mfrr', 'default' => 'mFRR'],
-                                        ['key' => 'afrr', 'default' => 'aFRR']
-                                    ];
-                                @endphp
-                                
-                                @foreach($solutions as $index => $solution)
-                                    <div class="mb-2">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Solution {{ $index + 1 }} Title
-                                        </label>
-                                        <input type="text" 
-                                               name="content[{{ $locale }}][solutions][{{ $index }}][title]" 
-                                               value="{{ old('content.'.$locale.'.solutions.'.$index.'.title', $content['solutions'][$index]['title'] ?? $solution['default']) }}"
-                                               class="w-full border-gray-300 rounded-md shadow-sm">
-                                        <input type="hidden" 
-                                               name="content[{{ $locale }}][solutions][{{ $index }}][slug]" 
-                                               value="{{ $solution['key'] }}">
-                                    </div>
-                                @endforeach
                             </div>
                             
                             <!-- Help Section -->
@@ -305,20 +268,35 @@
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('hero_subtitle.'.$locale, $page->translate($locale)->hero_subtitle ?? '') }}</textarea>
                             </div>
                             
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Button Text
+                            <!-- Display Settings -->
+                            <div class="mb-4 p-4 bg-gray-50 rounded">
+                                <h5 class="font-medium mb-2">Display Settings</h5>
+                                
+                                <label class="flex items-center mb-2">
+                                    <input type="checkbox" 
+                                           name="content[{{ $locale }}][show_rellax]" 
+                                           value="1" 
+                                           {{ old('content.'.$locale.'.show_rellax', $content['show_rellax'] ?? false) ? 'checked' : '' }}
+                                           class="mr-2">
+                                    <span class="text-sm">Show parallax image at top</span>
                                 </label>
+                                
+                                <label class="flex items-center mb-2">
+                                    <input type="checkbox" 
+                                           name="content[{{ $locale }}][show_rellax_mini]" 
+                                           value="1" 
+                                           {{ old('content.'.$locale.'.show_rellax_mini', $content['show_rellax_mini'] ?? false) ? 'checked' : '' }}
+                                           class="mr-2">
+                                    <span class="text-sm">Show mini parallax image</span>
+                                </label>
+                                
+                                <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">Button Text</label>
                                 <input type="text" 
                                        name="content[{{ $locale }}][button_text]" 
                                        value="{{ old('content.'.$locale.'.button_text', $content['button_text'] ?? 'Contact us') }}"
-                                       class="w-full border-gray-300 rounded-md shadow-sm">
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Explore Text
-                                </label>
+                                       class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Explore Text</label>
                                 <input type="text" 
                                        name="content[{{ $locale }}][explore_text]" 
                                        value="{{ old('content.'.$locale.'.explore_text', $content['explore_text'] ?? 'Explore') }}"
@@ -345,6 +323,15 @@
                                 <textarea name="content[{{ $locale }}][info][content]" 
                                           rows="10"
                                           class="w-full border-gray-300 rounded-md shadow-sm tinymce">{{ old('content.'.$locale.'.info.content', $content['info']['content'] ?? '') }}</textarea>
+                                
+                                <label class="flex items-center mt-2">
+                                    <input type="checkbox" 
+                                           name="content[{{ $locale }}][info][show_image]" 
+                                           value="1" 
+                                           {{ old('content.'.$locale.'.info.show_image', $content['info']['show_image'] ?? true) ? 'checked' : '' }}
+                                           class="mr-2">
+                                    <span class="text-sm">Show image</span>
+                                </label>
                             </div>
                             
                             <!-- Deliver Section (Benefits) -->
@@ -356,6 +343,15 @@
                                        name="content[{{ $locale }}][deliver][title]" 
                                        value="{{ old('content.'.$locale.'.deliver.title', $content['deliver']['title'] ?? '') }}"
                                        class="w-full border-gray-300 rounded-md shadow-sm mb-4">
+                                
+                                <label class="flex items-center mb-4">
+                                    <input type="checkbox" 
+                                           name="content[{{ $locale }}][deliver][show_numbers]" 
+                                           value="1" 
+                                           {{ old('content.'.$locale.'.deliver.show_numbers', $content['deliver']['show_numbers'] ?? false) ? 'checked' : '' }}
+                                           class="mr-2">
+                                    <span class="text-sm">Show numbers</span>
+                                </label>
                                 
                                 @for($i = 0; $i < 6; $i++)
                                     <div class="mb-3 p-3 bg-white rounded border">
@@ -369,6 +365,32 @@
                                         <textarea name="content[{{ $locale }}][deliver][items][{{ $i }}][text]" 
                                                   rows="2"
                                                   class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.deliver.items.'.$i.'.text', $content['deliver']['items'][$i]['text'] ?? '') }}</textarea>
+                                    </div>
+                                @endfor
+                            </div>
+                            
+                            <!-- Benefits Section (Alternative) -->
+                            <div class="mb-4 p-4 bg-gray-50 rounded">
+                                <h5 class="font-medium mb-2">Key Benefits Section (Alternative Layout)</h5>
+                                
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Section Title</label>
+                                <input type="text" 
+                                       name="content[{{ $locale }}][benefits][title]" 
+                                       value="{{ old('content.'.$locale.'.benefits.title', $content['benefits']['title'] ?? '') }}"
+                                       class="w-full border-gray-300 rounded-md shadow-sm mb-4">
+                                
+                                @for($i = 0; $i < 4; $i++)
+                                    <div class="mb-3 p-3 bg-white rounded border">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Benefit {{ $i + 1 }} Title</label>
+                                        <input type="text" 
+                                               name="content[{{ $locale }}][benefits][items][{{ $i }}][title]" 
+                                               value="{{ old('content.'.$locale.'.benefits.items.'.$i.'.title', $content['benefits']['items'][$i]['title'] ?? '') }}"
+                                               class="w-full border-gray-300 rounded-md shadow-sm mb-2">
+                                        
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Benefit {{ $i + 1 }} Text</label>
+                                        <textarea name="content[{{ $locale }}][benefits][items][{{ $i }}][text]" 
+                                                  rows="2"
+                                                  class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.benefits.items.'.$i.'.text', $content['benefits']['items'][$i]['text'] ?? '') }}</textarea>
                                     </div>
                                 @endfor
                             </div>
@@ -516,41 +538,6 @@
                                     <textarea name="content[{{ $locale }}][info2][paragraphs]" 
                                               rows="6"
                                               class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.info2.paragraphs', is_array($content['info2']['paragraphs'] ?? null) ? implode("\n\n", $content['info2']['paragraphs']) : ($content['info2']['paragraphs'] ?? '')) }}</textarea>
-                                </div>
-                                
-                                <div class="mb-4 p-4 bg-gray-50 rounded">
-                                    <h5 class="font-medium mb-2">Team Section</h5>
-                                    
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
-                                    <input type="text" 
-                                           name="content[{{ $locale }}][team][title]" 
-                                           value="{{ old('content.'.$locale.'.team.title', $content['team']['title'] ?? '') }}"
-                                           class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                    
-                                    <!-- Team Categories -->
-                                    @php
-                                        $teamCategories = [
-                                            ['key' => 'leadership', 'default' => 'Leadership Team'],
-                                            ['key' => 'customer-services', 'default' => 'Customer Services'],
-                                            ['key' => 'sales-marketing', 'default' => 'Sales & Marketing'],
-                                            ['key' => 'installations', 'default' => 'Installations'],
-                                            ['key' => 'central-services', 'default' => 'Central Services']
-                                        ];
-                                    @endphp
-                                    
-                                    <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">Category Names</label>
-                                    @foreach($teamCategories as $catIndex => $category)
-                                        <div class="mb-2">
-                                            <label class="block text-xs text-gray-600 mb-1">{{ $category['default'] }}</label>
-                                            <input type="text" 
-                                                   name="content[{{ $locale }}][team][categories][{{ $catIndex }}][title]" 
-                                                   value="{{ old('content.'.$locale.'.team.categories.'.$catIndex.'.title', $content['team']['categories'][$catIndex]['title'] ?? $category['default']) }}"
-                                                   class="w-full border-gray-300 rounded-md shadow-sm">
-                                            <input type="hidden" 
-                                                   name="content[{{ $locale }}][team][categories][{{ $catIndex }}][key]" 
-                                                   value="{{ $category['key'] }}">
-                                        </div>
-                                    @endforeach
                                 </div>
                                 
                                 <div class="mb-4 p-4 bg-gray-50 rounded">
@@ -733,49 +720,6 @@
                                            class="w-full border-gray-300 rounded-md shadow-sm">
                                 </div>
                             @endif
-                            
-                        @elseif($page->slug === 'how-we-work')
-                            <!-- How We Work Page -->
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Hero Title
-                                </label>
-                                <input type="text" 
-                                       name="hero_title[{{ $locale }}]" 
-                                       value="{{ old('hero_title.'.$locale, $page->translate($locale)->hero_title ?? '') }}"
-                                       class="w-full border-gray-300 rounded-md shadow-sm">
-                            </div>
-                            
-                            <div class="mb-4 p-4 bg-gray-50 rounded">
-                                <h5 class="font-medium mb-2">How We Find Best Solution Section</h5>
-                                
-                                @php
-                                    $howSteps = [
-                                        ['key' => 'listen', 'default_title' => 'We listen carefully'],
-                                        ['key' => 'research', 'default_title' => 'We do our research'],
-                                        ['key' => 'design', 'default_title' => 'We create a bespoke design']
-                                    ];
-                                @endphp
-                                
-                                @foreach($howSteps as $stepIndex => $step)
-                                    <div class="mb-3 p-3 bg-white rounded border">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Step {{ $stepIndex + 1 }} Title</label>
-                                        <input type="text" 
-                                               name="content[{{ $locale }}][steps][{{ $stepIndex }}][title]" 
-                                               value="{{ old('content.'.$locale.'.steps.'.$stepIndex.'.title', $content['steps'][$stepIndex]['title'] ?? $step['default_title']) }}"
-                                               class="w-full border-gray-300 rounded-md shadow-sm mb-2">
-                                        
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Step {{ $stepIndex + 1 }} Description</label>
-                                        <textarea name="content[{{ $locale }}][steps][{{ $stepIndex }}][description]" 
-                                                  rows="2"
-                                                  class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.steps.'.$stepIndex.'.description', $content['steps'][$stepIndex]['description'] ?? '') }}</textarea>
-                                        
-                                        <input type="hidden" 
-                                               name="content[{{ $locale }}][steps][{{ $stepIndex }}][key]" 
-                                               value="{{ $step['key'] }}">
-                                    </div>
-                                @endforeach
-                            </div>
                             
                         @else
                             <!-- Generic Page Content -->

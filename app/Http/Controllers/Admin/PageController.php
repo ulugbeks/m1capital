@@ -29,7 +29,7 @@ class PageController extends Controller
             $page->translateOrNew($locale)->meta_description = $request->input("meta_description.{$locale}");
             $page->translateOrNew($locale)->meta_keywords = $request->input("meta_keywords.{$locale}");
             
-            if ($page->slug === 'home') {
+            if (in_array($page->slug, ['home', 'about', 'contact', 'news', 'solutions']) || $page->type === 'solution') {
                 $page->translateOrNew($locale)->hero_title = $request->input("hero_title.{$locale}");
                 $page->translateOrNew($locale)->hero_subtitle = $request->input("hero_subtitle.{$locale}");
             }
@@ -67,15 +67,10 @@ class PageController extends Controller
             'future_proof' => [
                 'title' => $request->input("content.{$locale}.future_proof.title")
             ],
-            'solutions' => $request->input("content.{$locale}.solutions", []),
             'help' => [
                 'title' => $request->input("content.{$locale}.help.title"),
                 'items' => $request->input("content.{$locale}.help.items", []),
-                'tabs' => [
-                    ['key' => 'expertise', 'title' => 'Expertise'],
-                    ['key' => 'guidance', 'title' => 'Guidance'],
-                    ['key' => 'support', 'title' => 'Support']
-                ]
+                'tabs' => $request->input("content.{$locale}.help.tabs", [])
             ],
             'solutions_ad' => [
                 'title' => $request->input("content.{$locale}.solutions_ad.title")
@@ -87,12 +82,14 @@ class PageController extends Controller
             'partners' => [
                 'subtitle' => $request->input("content.{$locale}.partners.subtitle"),
                 'title' => $request->input("content.{$locale}.partners.title"),
+                'drag_text' => $request->input("content.{$locale}.partners.drag_text"),
                 'description_subtitle' => $request->input("content.{$locale}.partners.description_subtitle"),
                 'description_text' => $request->input("content.{$locale}.partners.description_text"),
                 'items' => [] // Управляется через отдельную таблицу
             ],
             'get_started' => [
                 'title' => $request->input("content.{$locale}.get_started.title"),
+                'button_text' => $request->input("content.{$locale}.get_started.button_text"),
                 'subtitle' => $request->input("content.{$locale}.get_started.subtitle"),
                 'text' => $request->input("content.{$locale}.get_started.text")
             ]
@@ -101,11 +98,44 @@ class PageController extends Controller
     
     private function getSolutionPageContent($request, $locale)
     {
-        return [
-            'description' => $request->input("content.{$locale}.description"),
-            'features' => $request->input("content.{$locale}.features", []),
-            'benefits' => $request->input("content.{$locale}.benefits", [])
+        $content = [
+            'button_text' => $request->input("content.{$locale}.button_text"),
+            'explore_text' => $request->input("content.{$locale}.explore_text"),
+            'show_rellax' => $request->boolean("content.{$locale}.show_rellax"),
+            'show_rellax_mini' => $request->boolean("content.{$locale}.show_rellax_mini"),
+            'info' => [
+                'title' => $request->input("content.{$locale}.info.title"),
+                'link_text' => $request->input("content.{$locale}.info.link_text"),
+                'content' => $request->input("content.{$locale}.info.content"),
+                'show_image' => $request->boolean("content.{$locale}.info.show_image")
+            ],
+            'deliver' => [
+                'title' => $request->input("content.{$locale}.deliver.title"),
+                'show_numbers' => $request->boolean("content.{$locale}.deliver.show_numbers"),
+                'items' => $request->input("content.{$locale}.deliver.items", [])
+            ],
+            'benefits' => [
+                'title' => $request->input("content.{$locale}.benefits.title"),
+                'items' => $request->input("content.{$locale}.benefits.items", [])
+            ],
+            'products' => [
+                'subtitle' => $request->input("content.{$locale}.products.subtitle"),
+                'title' => $request->input("content.{$locale}.products.title")
+            ],
+            'faq' => [
+                'title' => $request->input("content.{$locale}.faq.title"),
+                'subtitle' => $request->input("content.{$locale}.faq.subtitle"),
+                'items' => $request->input("content.{$locale}.faq.items", [])
+            ],
+            'get_started' => [
+                'title' => $request->input("content.{$locale}.get_started.title"),
+                'button_text' => $request->input("content.{$locale}.get_started.button_text"),
+                'subtitle' => $request->input("content.{$locale}.get_started.subtitle"),
+                'text' => $request->input("content.{$locale}.get_started.text")
+            ]
         ];
+        
+        return $content;
     }
     
     private function getAboutPageContent($request, $locale)
@@ -132,26 +162,14 @@ class PageController extends Controller
                 'link_text' => $request->input("content.{$locale}.info2.link_text"),
                 'paragraphs' => $info2Paragraphs
             ],
-            'team' => [
-                'title' => $request->input("content.{$locale}.team.title"),
-                'categories' => [
-                    ['key' => 'leadership', 'title' => 'Leadership Team'],
-                    ['key' => 'customer-services', 'title' => 'Customer Services'],
-                    ['key' => 'sales-marketing', 'title' => 'Sales & Marketing'],
-                    ['key' => 'installations', 'title' => 'Installations'],
-                    ['key' => 'central-services', 'title' => 'Central Services']
-                ]
-            ],
             'partners' => [
                 'title' => $request->input("content.{$locale}.partners.title"),
-                'categories' => [
-                    ['key' => 'partners', 'title' => 'Partners'],
-                    ['key' => 'charity', 'title' => 'Charity'],
-                    ['key' => 'hardware', 'title' => 'Hardware']
-                ]
+                'categories' => $request->input("content.{$locale}.partners.categories", []),
+                'info' => $request->input("content.{$locale}.partners.info", [])
             ],
             'get_started' => [
                 'title' => $request->input("content.{$locale}.get_started.title"),
+                'button_text' => $request->input("content.{$locale}.get_started.button_text"),
                 'subtitle' => $request->input("content.{$locale}.get_started.subtitle"),
                 'text' => $request->input("content.{$locale}.get_started.text")
             ]
@@ -166,7 +184,9 @@ class PageController extends Controller
                 'office_address' => $request->input("content.{$locale}.contact_details.office_address"),
                 'registered_label' => $request->input("content.{$locale}.contact_details.registered_label"),
                 'registered_address' => $request->input("content.{$locale}.contact_details.registered_address")
-            ]
+            ],
+            'form_labels' => $request->input("content.{$locale}.form_labels", []),
+            'site_types' => $request->input("content.{$locale}.site_types", [])
         ];
     }
 }
