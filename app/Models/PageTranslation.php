@@ -13,6 +13,8 @@ class PageTranslation extends Model
         'meta_keywords',
         'hero_title',
         'hero_subtitle',
+        'card_title',
+        'card_text',
         'content'
     ];
 

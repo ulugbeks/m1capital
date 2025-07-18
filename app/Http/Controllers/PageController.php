@@ -51,7 +51,12 @@ class PageController extends Controller
     public function solutions($locale)
     {
         $page = Page::where('slug', 'solutions')->firstOrFail();
-        $solutions = Page::where('type', 'solution')->active()->ordered()->get();
+        
+        // Загружаем страницы решений
+        $solutions = Page::where('type', 'solution')
+                        ->active()
+                        ->ordered()
+                        ->get();
         
         return view('pages.solutions', compact('page', 'solutions'));
     }

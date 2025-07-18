@@ -62,15 +62,6 @@
                                       class="w-full border-gray-300 rounded-md shadow-sm">{{ old('meta_description.'.$locale, $page->translate($locale)->meta_description ?? '') }}</textarea>
                         </div>
                         
-                        <!-- <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                Meta Keywords
-                            </label>
-                            <input type="text" 
-                                   name="meta_keywords[{{ $locale }}]" 
-                                   value="{{ old('meta_keywords.'.$locale, $page->translate($locale)->meta_keywords ?? '') }}"
-                                   class="w-full border-gray-300 rounded-md shadow-sm">
-                        </div> -->
                         <hr class="mb-4" style="border: 2px solid #333;">
                         @php
                             $content = $page->translate($locale)->content ?? [];
@@ -471,8 +462,8 @@
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.get_started.text', $content['get_started']['text'] ?? '') }}</textarea>
                             </div>
                             
-                        @elseif(in_array($page->slug, ['about', 'contact', 'news', 'solutions']))
-                            <!-- Static Pages with Hero -->
+                        @elseif($page->slug === 'solutions')
+                            <!-- Solutions Page Specific Content -->
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     Hero Title
@@ -492,14 +483,78 @@
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('hero_subtitle.'.$locale, $page->translate($locale)->hero_subtitle ?? '') }}</textarea>
                             </div>
                             
-                            <div class="mb-4">
+                            <div class="mb-4 p-4 bg-gray-50 rounded">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Explore Text
+                                    Pick Your Use Case Title
                                 </label>
                                 <input type="text" 
-                                       name="content[{{ $locale }}][explore_text]" 
-                                       value="{{ old('content.'.$locale.'.explore_text', $content['explore_text'] ?? 'Explore') }}"
+                                       name="content[{{ $locale }}][pick_use_case_title]" 
+                                       value="{{ old('content.'.$locale.'.pick_use_case_title', $content['pick_use_case_title'] ?? 'Pick your use case') }}"
                                        class="w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+                            
+                            <!-- Solution Cards Content -->
+                            <div class="mb-4 p-4 bg-blue-50 rounded">
+                                <h5 class="font-medium mb-4 text-blue-800">Solution Cards Content</h5>
+                                
+                                @php
+                                    // Получаем все страницы решений
+                                    $solutionPages = \App\Models\Page::where('type', 'solution')->ordered()->get();
+                                @endphp
+                                
+                                @foreach($solutionPages as $index => $solution)
+                                    <div class="mb-6 p-4 bg-white rounded border border-blue-200">
+                                        <h6 class="font-semibold mb-3 text-blue-700">
+                                            {{ $index + 1 }}. {{ $solution->title }} ({{ $solution->slug }})
+                                        </h6>
+                                        
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                                Card Title
+                                            </label>
+                                            <input type="text" 
+                                                   name="content[{{ $locale }}][solutions][{{ $solution->slug }}][card_title]" 
+                                                   value="{{ old('content.'.$locale.'.solutions.'.$solution->slug.'.card_title', $content['solutions'][$solution->slug]['card_title'] ?? '') }}"
+                                                   class="w-full border-gray-300 rounded-md shadow-sm"
+                                                   placeholder="Title shown next to the solution card">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                                Card Text
+                                            </label>
+                                            <textarea name="content[{{ $locale }}][solutions][{{ $solution->slug }}][card_text]" 
+                                                      rows="3"
+                                                      class="w-full border-gray-300 rounded-md shadow-sm"
+                                                      placeholder="Text shown next to the solution card">{{ old('content.'.$locale.'.solutions.'.$solution->slug.'.card_text', $content['solutions'][$solution->slug]['card_text'] ?? '') }}</textarea>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                
+                                <p class="text-sm text-gray-600 mt-2">
+                                    These fields control how each solution appears on this Solutions page in a chess-like pattern
+                                </p>
+                            </div>
+                            
+                        @elseif(in_array($page->slug, ['about', 'contact', 'news']))
+                            <!-- Static Pages with Hero -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Hero Title
+                                </label>
+                                <input type="text" 
+                                       name="hero_title[{{ $locale }}]" 
+                                       value="{{ old('hero_title.'.$locale, $page->translate($locale)->hero_title ?? '') }}"
+                                       class="w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Hero Subtitle
+                                </label>
+                                <textarea name="hero_subtitle[{{ $locale }}]" 
+                                          rows="2"
+                                          class="w-full border-gray-300 rounded-md shadow-sm">{{ old('hero_subtitle.'.$locale, $page->translate($locale)->hero_subtitle ?? '') }}</textarea>
                             </div>
                             
                             @if($page->slug === 'about')
@@ -685,39 +740,6 @@
                                                    class="w-full border-gray-300 rounded-md shadow-sm">
                                         </div>
                                     @endforeach
-                                    
-                                    <!-- Site Types -->
-                                    <label class="block text-sm font-medium text-gray-700 mb-2 mt-4">Site Type Options</label>
-                                    @php
-                                        $siteTypes = [
-                                            'residential-apartment' => 'Residential Apartment',
-                                            'hotel-and-leisure' => 'Hotel & Leisure',
-                                            'holiday-park' => 'Holiday park',
-                                            'workplace' => 'Workplace'
-                                        ];
-                                    @endphp
-                                    
-                                    @foreach($siteTypes as $typeKey => $defaultType)
-                                        <div class="mb-2">
-                                            <label class="block text-xs text-gray-600 mb-1">{{ $defaultType }}</label>
-                                            <input type="text" 
-                                                   name="content[{{ $locale }}][site_types][{{ $typeKey }}]" 
-                                                   value="{{ old('content.'.$locale.'.site_types.'.$typeKey, $content['site_types'][$typeKey] ?? $defaultType) }}"
-                                                   class="w-full border-gray-300 rounded-md shadow-sm">
-                                        </div>
-                                    @endforeach
-                                </div>
-                                
-                            @elseif($page->slug === 'solutions')
-                                <!-- Solutions Page Content -->
-                                <div class="mb-4 p-4 bg-gray-50 rounded">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Pick Your Use Case Title
-                                    </label>
-                                    <input type="text" 
-                                           name="content[{{ $locale }}][pick_use_case_title]" 
-                                           value="{{ old('content.'.$locale.'.pick_use_case_title', $content['pick_use_case_title'] ?? 'Pick your use case') }}"
-                                           class="w-full border-gray-300 rounded-md shadow-sm">
                                 </div>
                             @endif
                             

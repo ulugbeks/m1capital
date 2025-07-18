@@ -25,6 +25,8 @@ class Page extends Model implements TranslatableContract
         'meta_keywords',
         'hero_title',
         'hero_subtitle',
+        'card_title',
+        'card_text',
         'content'
     ];
 
@@ -61,7 +63,6 @@ class Page extends Model implements TranslatableContract
 
         return [];
     }
-
 
     public function getSectionData($section)
     {

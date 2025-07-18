@@ -34,6 +34,12 @@ class PageController extends Controller
                 $page->translateOrNew($locale)->hero_subtitle = $request->input("hero_subtitle.{$locale}");
             }
             
+            // Добавляем обработку card_title и card_text для страниц решений
+            if ($page->type === 'solution') {
+                $page->translateOrNew($locale)->card_title = $request->input("card_title.{$locale}");
+                $page->translateOrNew($locale)->card_text = $request->input("card_text.{$locale}");
+            }
+            
             // Сохраняем контент в зависимости от типа страницы
             $content = [];
             
@@ -45,7 +51,8 @@ class PageController extends Controller
                 $content = $this->getContactPageContent($request, $locale);
             } elseif ($page->slug === 'solutions') {
                 $content = [
-                    'pick_use_case_title' => $request->input("content.{$locale}.pick_use_case_title")
+                    'pick_use_case_title' => $request->input("content.{$locale}.pick_use_case_title"),
+                    'solutions' => $request->input("content.{$locale}.solutions", [])
                 ];
             } elseif ($page->type === 'solution') {
                 $content = $this->getSolutionPageContent($request, $locale);
