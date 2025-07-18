@@ -117,28 +117,7 @@
                         </div>
                     </div>
                     
-                    @foreach(['en', 'lv'] as $locale)
-                        <div class="seo-content {{ $locale !== 'en' ? 'hidden' : '' }}" data-lang="{{ $locale }}">
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Default Site Title ({{ strtoupper($locale) }})
-                                </label>
-                                <input type="text" 
-                                       name="settings[site_title][{{ $locale }}]" 
-                                       value="{{ isset($settings['site_title']) && $settings['site_title']->translate($locale) ? $settings['site_title']->translate($locale)->value : 'Energy Park - EV Charging Solutions' }}"
-                                       class="w-full border-gray-300 rounded-md shadow-sm">
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Default Meta Description ({{ strtoupper($locale) }})
-                                </label>
-                                <textarea name="settings[site_description][{{ $locale }}]" 
-                                          rows="3"
-                                          class="w-full border-gray-300 rounded-md shadow-sm">{{ isset($settings['site_description']) && $settings['site_description']->translate($locale) ? $settings['site_description']->translate($locale)->value : 'Energy Park provides tailored EV charging solutions for apartment buildings, hotels, holiday parks and workplaces.' }}</textarea>
-                            </div>
-                        </div>
-                    @endforeach
+                    
                 </div>
                 
                 <div class="mt-6 flex items-center justify-between">

@@ -28,6 +28,11 @@
         right: auto;
     }
 
+
+    a.logo__link img {
+        width: 170px!important;
+    }
+
     .header__button {
         display: none;
     }
@@ -115,7 +120,7 @@
     }
 
     .nav__link span {
-        font-size: var(--fs-h3);
+        font-size: var(--fs-h4);
     }
 
     .nav__links,

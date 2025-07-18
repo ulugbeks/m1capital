@@ -9,8 +9,14 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public function show($locale, $slug)
+    public function show($locale, $slug = null)
     {
+        // Если slug не передан, но locale на самом деле является slug
+        if ($slug === null && in_array($locale, ['about', 'contact', 'how-we-work'])) {
+            $slug = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $page = Page::where('slug', $slug)->active()->firstOrFail();
         
         // Определяем какой шаблон использовать

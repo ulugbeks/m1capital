@@ -18,17 +18,30 @@ let scrollImgs = document.querySelectorAll('img.scroll');
 const scrollConstVhs = 0.20;
 const scrollConst = window.innerHeight * scrollConstVhs;
 
+// Определяем, находимся ли мы на главной странице
+// Используем window.pageInfo если доступно (из Blade), иначе проверяем URL
+const isHomePage = window.pageInfo ? window.pageInfo.isHomePage : 
+    (page === '/' || page === '/en' || page === '/lv' || page === '/en/' || page === '/lv/');
+
+// Отладочная информация
+console.log('Navigation initialized:', {
+    pathname: page,
+    isHomePage: isHomePage,
+    pageInfo: window.pageInfo || 'not available'
+});
 
 function initScrollImgs() {
     scrollImgs = document.querySelectorAll('img.scroll');
 }
 
-// === Rellax ===
-relaxes.forEach(el => {
-    new Rellax(el, {
-        center: true,
+// === Rellax - проверяем существование библиотеки ===
+if (typeof Rellax !== 'undefined' && relaxes.length > 0) {
+    relaxes.forEach(el => {
+        new Rellax(el, {
+            center: true,
+        });
     });
-});
+}
 
 window.addEventListener('scroll', () => {
     let a = 0
@@ -44,6 +57,15 @@ window.addEventListener('scroll', () => {
 
 // === Configuration & Helpers ===
 const dragSwiper = (selector, args = {}) => {
+    // Проверяем существование Swiper
+    if (typeof Swiper === 'undefined') {
+        console.warn('Swiper is not loaded');
+        return null;
+    }
+    
+    const element = document.querySelector(selector);
+    if (!element) return null;
+    
     const defaultArgs = {
         direction: 'horizontal',
         slidesPerView: 'auto',
@@ -64,7 +86,7 @@ const dragSwiper = (selector, args = {}) => {
 };
 
 // === Smooth Scrolling (Lenis) ===
-if (!isPhone) {
+if (!isPhone && typeof Lenis !== 'undefined') {
     const lenis = new Lenis({
         duration: 1.2,
         easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -87,37 +109,96 @@ circleBgButtons.forEach(circleBgButton => {
 })
 
 // === Navigation Toggle ===
-const toggleNav = ({ deltaY }) => {
+const toggleNav = () => {
     if (isModalOpened) return;
 
-    if (!isPhone) {
-        logoImg.src = '/assets/logo_black.svg';
-    };
-    if (isPhone) {
-        document.querySelector('.nav__phone img').src = '/assets/logo_black.svg';
-    }
-    const scrollPos = window.scrollY + deltaY;
+    const scrollPos = window.scrollY;
 
-    if (scrollPos <= 60 && !isSubmenuOpened && page == '/') {
-        logoImg.src = '/assets/logo_white.svg';
-        document.querySelector('.nav__phone img').src = '/assets/logo_white.svg';
-        nav.classList.remove('active', 'hidden');
-    } else if (scrollPos < window.innerHeight * 0.5) {
-        nav.classList.add('active');
-        nav.classList.remove('hidden');
-    } else if (deltaY > 0) {
-        nav.classList.add('hidden');
+    // Логика только для главной страницы
+    if (isHomePage) {
+        // Если находимся в самом верху страницы (меньше 60px) и на главной странице
+        if (scrollPos <= 60 && !isSubmenuOpened) {
+            if (logoImg) logoImg.src = '/assets/logo_white_.svg';
+            if (isPhone) {
+                const phoneLogo = document.querySelector('.nav__phone img');
+                if (phoneLogo) phoneLogo.src = '/assets/logo_white_.svg';
+            }
+            nav.classList.remove('active', 'hidden');
+        } else {
+            // При любом скролле больше 60px добавляем active класс
+            if (!isPhone && logoImg) {
+                logoImg.src = '/assets/black_new.svg';
+            }
+            if (isPhone) {
+                const phoneLogo = document.querySelector('.nav__phone img');
+                if (phoneLogo) phoneLogo.src = '/assets/black_new.svg';
+            }
+            nav.classList.add('active');
+            nav.classList.remove('hidden');
+        }
     } else {
+        // Для всех остальных страниц - всегда active
+        if (!isPhone && logoImg) {
+            logoImg.src = '/assets/black_new.svg';
+        }
+        if (isPhone) {
+            const phoneLogo = document.querySelector('.nav__phone img');
+            if (phoneLogo) phoneLogo.src = '/assets/black_new.svg';
+        }
         nav.classList.add('active');
         nav.classList.remove('hidden');
     }
 };
 
-document.addEventListener('wheel', toggleNav);
-document.addEventListener('touchmove', toggleNav);
+// Отдельная функция для скрытия/показа навигации при скролле
+let lastScrollTop = 0;
+const handleNavVisibility = () => {
+    const scrollTop = window.scrollY;
+    
+    if (scrollTop > window.innerHeight * 0.5) {
+        if (scrollTop > lastScrollTop) {
+            // Скролл вниз
+            nav.classList.add('hidden');
+        } else {
+            // Скролл вверх
+            nav.classList.remove('hidden');
+        }
+    }
+    
+    lastScrollTop = scrollTop;
+};
 
+// Обработчики событий
+document.addEventListener('scroll', () => {
+    toggleNav();
+    handleNavVisibility();
+});
+
+// Проверка начального состояния
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => toggleNav({ deltaY: 1 }), 200);
+    if (isHomePage) {
+        // Для главной страницы проверяем скролл
+        if (window.scrollY <= 60) {
+            if (logoImg) logoImg.src = '/assets/logo_white_.svg';
+            if (isPhone) {
+                const phoneLogo = document.querySelector('.nav__phone img');
+                if (phoneLogo) phoneLogo.src = '/assets/logo_white_.svg';
+            }
+            nav.classList.remove('active', 'hidden');
+        } else {
+            toggleNav();
+        }
+    } else {
+        // Для всех остальных страниц сразу делаем навигацию активной
+        if (!isPhone && logoImg) {
+            logoImg.src = '/assets/black_new.svg';
+        }
+        if (isPhone) {
+            const phoneLogo = document.querySelector('.nav__phone img');
+            if (phoneLogo) phoneLogo.src = '/assets/black_new.svg';
+        }
+        nav.classList.add('active');
+    }
 });
 
 // === Scroll To Top ===
@@ -129,7 +210,15 @@ toTopButtons.forEach(button => {
 
 // === Products Slider ===
 function initProductsSlider(products, selector) {
+    // Проверяем существование переменной products
+    if (typeof products === 'undefined') {
+        console.warn('Products variable is not defined');
+        return;
+    }
+    
     const wrapper = document.querySelector(`${selector} .swiper-wrapper`);
+    if (!wrapper) return;
+    
     Object.entries(products).forEach(([key, product]) => {
         const slide = document.createElement('div');
         slide.className = 'product products__slide swiper-slide';
@@ -160,26 +249,47 @@ function initProductsSlider(products, selector) {
 
 // === Product Modal ===
 function openProductModal(key) {
-    if (isModalOpened) return;
+    // Проверяем существование products
+    if (typeof products === 'undefined') {
+        console.warn('Products variable is not defined');
+        return;
+    }
+    
+    if (isModalOpened || !modal) return;
     isModalOpened = true;
 
     const product = products[key];
-    modal.querySelector('.product-modal__title').textContent = product.title;
-    modal.querySelector('.product-modal__subtitle').textContent = product.subtitle;
-    modal.querySelector('.product-modal__text').innerHTML =
-        product.description.replace(/\n/g, '<br/>') +
-        '<br/><br/>' +
-        `${product.manufacters_standart} standard manufacturer’s warranty.`;
-
-    modal.querySelector('#modal_features').innerHTML =
-        product.features.map(f => `<li>${f}</li>`).join('');
-    modal.querySelector('#modal_applications').innerHTML =
-        product.applications.map(a => `<li>${a}</li>`).join('');
-    modal.querySelector('img').src = `/assets/products/${key}.png`;
+    if (!product) return;
+    
+    const titleEl = modal.querySelector('.product-modal__title');
+    const subtitleEl = modal.querySelector('.product-modal__subtitle');
+    const textEl = modal.querySelector('.product-modal__text');
+    const featuresEl = modal.querySelector('#modal_features');
+    const applicationsEl = modal.querySelector('#modal_applications');
+    const imgEl = modal.querySelector('img');
+    
+    if (titleEl) titleEl.textContent = product.title;
+    if (subtitleEl) subtitleEl.textContent = product.subtitle;
+    if (textEl) {
+        textEl.innerHTML =
+            product.description.replace(/\n/g, '<br/>') +
+            '<br/><br/>' +
+            `${product.manufacters_standart} standard manufacturer's warranty.`;
+    }
+    if (featuresEl) {
+        featuresEl.innerHTML = product.features.map(f => `<li>${f}</li>`).join('');
+    }
+    if (applicationsEl) {
+        applicationsEl.innerHTML = product.applications.map(a => `<li>${a}</li>`).join('');
+    }
+    if (imgEl) {
+        imgEl.src = `/assets/products/${key}.png`;
+    }
+    
     modal.classList.remove('hidden');
 }
 
-if (modalCloseBtn) {
+if (modalCloseBtn && modal) {
     modalCloseBtn.addEventListener('click', () => {
         modal.classList.add('hide_anim');
         setTimeout(() => {
@@ -198,21 +308,22 @@ function setupSubmenu(link, block) {
     if (!link || !block) return;
     const open = () => {
         isSubmenuOpened = true;
-        toggleNav({ deltaY: 0 });
+        toggleNav();
         block.classList.add('active');
-        overlay.classList.add('active');
+        if (overlay) overlay.classList.add('active');
         body.classList.add('overflow-hidden');
     };
     const close = () => {
         isSubmenuOpened = false;
         block.classList.remove('active');
-        overlay.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
         body.classList.remove('overflow-hidden');
-        setTimeout(() => toggleNav({ deltaY: 0 }), 600);
+        setTimeout(() => toggleNav(), 600);
     };
     link.addEventListener('mouseenter', open);
     link.addEventListener('mouseleave', e => {
-        if (e.toElement && e.toElement.classList.contains('nav__submenu')) return;
+        const relatedTarget = e.relatedTarget || e.toElement;
+        if (relatedTarget && relatedTarget.classList.contains('nav__submenu')) return;
         close();
     });
     block.addEventListener('mouseleave', close);
@@ -222,11 +333,18 @@ setupSubmenu(solutionLink, solutionBlock);
 setupSubmenu(aboutLink, aboutBlock);
 
 if (isPhone) {
-    document.querySelector('#nav_open').onclick = () => {
-        nav.classList.add('opened');
+    const navOpen = document.querySelector('#nav_open');
+    const navClose = document.querySelector('#nav_close');
+    
+    if (navOpen) {
+        navOpen.onclick = () => {
+            nav.classList.add('opened');
+        }
     }
-
-    document.querySelector('#nav_close').onclick = () => {
-        nav.classList.remove('opened');
+    
+    if (navClose) {
+        navClose.onclick = () => {
+            nav.classList.remove('opened');
+        }
     }
 }

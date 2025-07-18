@@ -61,7 +61,7 @@
                                    name="title[{{ $locale }}]" 
                                    value="{{ old('title.'.$locale) }}"
                                    class="w-full border-gray-300 rounded-md shadow-sm"
-                                   required>
+                                   >
                             @error('title.'.$locale)
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
@@ -85,7 +85,7 @@
                             <textarea name="content[{{ $locale }}]" 
                                       rows="10"
                                       class="w-full border-gray-300 rounded-md shadow-sm tinymce"
-                                      required>{{ old('content.'.$locale) }}</textarea>
+                                      >{{ old('content.'.$locale) }}</textarea>
                             @error('content.'.$locale)
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror

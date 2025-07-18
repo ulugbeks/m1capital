@@ -2,7 +2,7 @@
     <div class="nav__top-bar"></div>
     <div class="nav__phone only-phone">
         <a href="{{ route('home', app()->getLocale()) }}" class="logo__link">
-            <img src="{{ asset('assets/logo_white.svg') }}" alt="">
+            <img src="{{ asset('assets/logo_white.svg') }}?v={{ time() }}" alt="">
         </a>
         <span id="nav_open">{{ __('Menu') }}</span>
     </div>
@@ -10,7 +10,7 @@
         <div class="nav__left">
             <div class="nav__logo">
                 <a href="{{ route('home', app()->getLocale()) }}" class="logo__link">
-                    <img src="{{ asset('assets/logo_white.svg') }}" alt="">
+                    <img src="{{ asset('assets/logo_white.svg') }}?v={{ time() }}" alt="">
                 </a>
                 <div id="nav_close" class="only-phone">{{ __('Close') }}</div>
             </div>
@@ -28,7 +28,7 @@
                         </a>
                     </li>
                     <li class="nav__item" id="nav_about_link">
-                        <a href="{{ route('about', ['locale' => app()->getLocale(), 'slug' => 'about']) }}" class="nav__link nav__link_full">
+                        <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'about']) }}" class="nav__link nav__link_full">
                             <span class="underline-anim">{{ __('About Us') }}</span>
                         </a>
                     </li>
@@ -38,7 +38,7 @@
                         </a>
                     </li>
                     <li class="nav__item only-phone">
-                        <a href="/{{ app()->getLocale() }}/how-we-work" class="nav__link">
+                        <a href="{{ route('how-we-work', ['locale' => app()->getLocale(), 'slug' => 'how-we-work']) }}" class="nav__link">
                             <span class="underline-anim">{{ __('How we work') }}</span>
                         </a>
                     </li>
@@ -54,7 +54,9 @@
                     $currentParams = request()->route()->parameters();
                     unset($currentParams['locale']);
                 @endphp
-                <div class="language-dropdown">
+                
+                {{-- Десктоп версия - с выпадающим меню --}}
+                <div class="language-dropdown only-desktop">
                     <button class="language-current">
                         {{ strtoupper($currentLocale) }}
                         <i class="fas fa-chevron-down"></i>
@@ -69,8 +71,19 @@
                         @endforeach
                     </div>
                 </div>
+                
+                {{-- Мобильная версия - только неактивный язык --}}
+                <div class="language-mobile only-phone">
+                    @foreach($availableLocales as $locale)
+                        @if($locale !== $currentLocale)
+                            <a href="{{ route($currentRoute, array_merge(['locale' => $locale], $currentParams)) }}" class="language-link">
+                                {{ strtoupper($locale) }}
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
             </div>
-            <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}" class="button arrow-btn">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}" class="button arrow-btn">
                 <span>{{ __('Contact') }}</span>
                 <div class="i_bg">
                     <i class="fas fa-arrow-right"></i>
@@ -82,11 +95,15 @@
 
 <div class="nav__overlay"></div>
 
-@if($solutions ?? false)
+@php
+    // Получаем страницы решений
+    $solutionPages = \App\Models\Page::where('type', 'solution')->active()->ordered()->get();
+@endphp
+
 <section class="nav__submenu" id="nav_solutions">
     <p class="submenu__title">{{ __('Solutions') }}</p>
     <div class="submenu__cards">
-        @foreach($solutions as $solution)
+        @foreach($solutionPages as $solution)
         <div class="submenu__card">
             <a href="{{ route('solution', ['locale' => app()->getLocale(), 'slug' => $solution->slug]) }}">
                 <div class="submenu__preview">
@@ -99,13 +116,12 @@
         @endforeach
     </div>
 </section>
-@endif
 
-<section class="nav__submenu" id="nav_about">
+<!-- <section class="nav__submenu" id="nav_about">
     <p class="submenu__title">{{ __('About us') }}</p>
     <div class="submenu__cards">
         <div class="submenu__card">
-            <a href="{{ route('about', ['locale' => app()->getLocale(), 'slug' => 'about']) }}">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'about']) }}">
                 <div class="submenu__preview">
                     <i class="fas fa-arrow-right submenu__icon"></i>
                     <img src="{{ asset('assets/about_previews/who_we_are.png') }}" class="submenu__img">
@@ -114,7 +130,7 @@
             </a>
         </div>
         <div class="submenu__card">
-            <a href="/{{ app()->getLocale() }}/how-we-work">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'how-we-work']) }}">
                 <div class="submenu__preview">
                     <i class="fas fa-arrow-right submenu__icon"></i>
                     <img src="{{ asset('assets/about_previews/how_we_work.png') }}" class="submenu__img">
@@ -123,4 +139,4 @@
             </a>
         </div>
     </div>
-</section>
+</section> -->

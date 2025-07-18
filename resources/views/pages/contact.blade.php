@@ -44,31 +44,14 @@
             <label for="company">{{ __('Company') }}</label>
             <input type="text" id="company" name="company">
             
-            <label for="your-site">{{ __('Your site') }}*</label>
-            <select name="site_type" id="your-site">
-                <option value="residential-apartment">{{ __('Residential Apartment') }}</option>
-                <option value="hotel-and-leisure">{{ __('Hotel & Leisure') }}</option>
-                <option value="holiday-park">{{ __('Holiday park') }}</option>
-                <option value="workplace">{{ __('Workplace') }}</option>
-            </select>
-            
-            <label for="address">{{ __('Address') }}</label>
-            <input type="text" id="address" name="address">
-            
-            <label for="city">{{ __('City') }}</label>
-            <input type="text" id="city" name="city">
-            
-            <label for="post-code">{{ __('Post code') }}*</label>
-            <input type="text" id="post-code" name="post_code" required>
-            
             <label for="email">{{ __('Email') }}*</label>
             <input type="email" id="email" name="email" required>
             
             <label for="telephone">{{ __('Telephone') }}</label>
             <input type="tel" id="telephone" name="telephone">
             
-            <label for="message">{{ __('Please tell us a bit about your site') }}</label>
-            <textarea id="message" name="message"></textarea>
+            <!-- <label for="message">{{ __('Please tell us a bit about your site') }}</label>
+            <textarea id="message" name="message"></textarea> -->
             
             <div class="contact__checkbox">
                 <input type="checkbox" id="privacy" name="privacy" required>
@@ -85,5 +68,15 @@
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
+        <style>
+            .header__title, .header__subtitle, .header__note, .header__note i {
+                color: #000!important;
+            }
+            header {
+                width: 100%;
+                min-height: 18vh;
+                position: relative;
+            }
+        </style>
     @endpush
 @endsection

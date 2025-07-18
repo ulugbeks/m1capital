@@ -18,7 +18,7 @@
                 <div class="solutions__card solution">
                     <a href="{{ route('solution', ['locale' => app()->getLocale(), 'slug' => $solution->slug]) }}">
                         <div class="solution__img-wrapper">
-                            <img class="solution__img" src="{{ asset('assets/solutions-page/previews/' . str_replace('-', '_', $solution->slug) . '.png') }}" 
+                            <img class="solution__img" src="{{ asset('assets/solutions-page/previews/' . $solution->slug . '.png') }}" 
                                  alt="{{ $solution->title }}">
                         </div>
                         <p class="solution__title">{{ $solution->title }}</p>
@@ -31,5 +31,15 @@
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/solutions.css') }}">
+        <style>
+            .header__title, .header__subtitle, .header__note, .header__note i {
+                color: #000!important;
+            }
+            header {
+                width: 100%;
+                min-height: 30vh;
+                position: relative;
+            }
+        </style>
     @endpush
 @endsection

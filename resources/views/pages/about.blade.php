@@ -12,7 +12,7 @@
     <div class="rellax-wrapper">
         <div class="clip-mask">
             <div class="rellax" data-rellax-speed="-3">
-                <img src="{{ asset('assets/about/1.png') }}" />
+                <img src="{{ asset('assets/about/about-1.jpeg') }}" />
             </div>
         </div>
     </div>
@@ -28,21 +28,21 @@
                 <p class="section-text">{!! $paragraph !!}</p>
             @endforeach
         </div>
-        <img src="{{ asset('assets/about/2.png') }}" class="info__img">
+        <img src="{{ asset('assets/about/about-2.jpeg') }}" class="info__img">
     </section>
 
     <section class="section-grid info">
-        <img src="{{ asset('assets/about/3.png') }}" class="info__img">
+        <img src="{{ asset('assets/about/beach.jpeg') }}" class="info__img">
         <div class="info__description section-description">
             <h3 class="info__title">{{ $content['info2']['title'] ?? 'We\'ll help you find the best solution for your site.' }}</h3>
-            <a href="{{ route('how-we-work', app()->getLocale()) }}" class="section-subtitle underline-anim">{{ $content['info2']['link_text'] ?? 'How we do it' }}</a>
+            <a href="{{ route('contact', app()->getLocale()) }}" class="section-subtitle underline-anim">{{ $content['info2']['link_text'] ?? 'How we do it' }}</a>
             @foreach($content['info2']['paragraphs'] ?? [] as $paragraph)
                 <p class="section-text">{{ $paragraph }}</p>
             @endforeach
         </div>
     </section>
 
-    <section class="team">
+    <!-- <section class="team">
         <h2 class="team__title">{{ $content['team']['title'] ?? 'Meet the team' }}</h2>
         <div class="team__categories">
             @foreach($content['team']['categories'] ?? [] as $category)
@@ -51,12 +51,12 @@
         </div>
         <div class="persons-slider drag-slider swiper" id="persons_slider">
             <div class="swiper-wrapper" id="persons_wrapper">
-                <!-- Team members will be loaded here -->
+                
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <section class="partners">
+    <!-- <section class="partners">
         <h2 class="partners__title">{!! $content['partners']['title'] ?? 'Our charging solutions are all <br> made possible by our partners.' !!}</h2>
         <div class="partners__wrapper">
             <div class="partners__info">
@@ -71,10 +71,10 @@
                 </div>
             </div>
             <div class="partners__grid" data-type="partnersGrid_imgs">
-                <!-- Partners will be loaded here -->
+                
             </div>
         </div>
-    </section>
+    </section> -->
 
     <section class="get-started">
         <h2 class="get-started__title">{!! $content['get_started']['title'] ?? 'Ready to get <br> started?' !!}</h2>
@@ -93,6 +93,17 @@
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/about.css') }}">
+        <style>
+            .header__title, .header__subtitle, .header__note, .header__note i {
+                color: #000!important;
+            }
+            @media (max-width: 576px) {
+                .header__title {
+                    font-size: 55px;
+                    line-height: 65px;
+                }
+            }
+        </style>
     @endpush
 
     @push('scripts')

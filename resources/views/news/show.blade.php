@@ -63,5 +63,10 @@
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/new.css') }}">
+        <style>
+            .header__title, .header__subtitle, .header__note, .header__note i {
+                color: #000!important;
+            }
+        </style>
     @endpush
 @endsection

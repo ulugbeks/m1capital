@@ -24,7 +24,7 @@
     <div class="rellax-wrapper">
         <div class="clip-mask">
             <div class="rellax" data-rellax-speed="-3">
-                <img src="{{ asset('assets/solutions/' . $solution->slug . '/1.png') }}" />
+                <img src="{{ asset('assets/solutions-page/apartment-buildings/1.png') }}" />
             </div>
         </div>
     </div>
@@ -185,6 +185,11 @@
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/solution.css') }}">
+        <style>
+            .header__title, .header__subtitle, .header__note, .header__note i {
+                color: #000!important;
+            }
+        </style>
     @endpush
 
     @push('scripts')

@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="section-grid footer__top">
         <div class="footer__logo">
-            <img src="{{ asset('assets/logo_black.svg') }}" alt="">
+            <img src="{{ asset('assets/logo_black_.svg') }}" alt="">
         </div>
         <div class="foooter__contacts">
             <a href="tel:{{ \App\Models\Setting::get('phone', '020 3345 3310') }}" class="underline-anim">{{ \App\Models\Setting::get('phone', '020 3345 3310') }}</a>
@@ -36,7 +36,6 @@
             {{ date('Y') }}
         </div>
         <div class="footer__right">
-            <a href="https://github.com/thisSasha" target="_blank">Site by ThisDevSasha</a>
             <button id="toTop">{{ __('Back to top') }}</button>
         </div>
     </div>

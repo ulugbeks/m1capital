@@ -53,6 +53,7 @@ header {
     object-fit: cover;
     object-position: center;
     z-index: 1;
+    filter: brightness(0.5);
 }
 
 .header__title,
@@ -73,7 +74,7 @@ header {
 }
 
 .future-proof__img {
-    width: 24vw;
+    width: 28vw;
     border-radius: 8px
 }
 
@@ -276,7 +277,7 @@ header {
 
 /* ==========================  SOLUTIONS-AD  ========================= */
 .solutions-ad {
-    background: url('/assets/index/solutions-ad.png') center/cover fixed no-repeat;
+    background: url('/assets/index/sol-ad.jpeg') center/cover fixed no-repeat;
     width: 98vw;
     height: 90vh;
     margin: 0 auto;
@@ -349,4 +350,8 @@ header {
 
 .partners__info {
     margin-top: 80px;
+}
+
+section.partners {
+    padding: 70px 0;
 }

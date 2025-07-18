@@ -773,7 +773,7 @@ footer hr {
     z-index: 5;
     position: fixed;
     width: 100%;
-    top: 13vh;
+    top: 11vh;
     background-color: var(--color-bg);
     overflow: hidden;
     padding: 48px 60px;
@@ -939,4 +939,46 @@ header {
         opacity: 1;
         transform: none
     }
+}
+
+/*.header__title, .header__subtitle, .header__note, .header__note i {
+    color: #000!important;
+}*/
+
+.nav__logo img,
+.footer__logo img {
+    width: 270px;
+}
+
+@media (max-width: 768px) {
+    .nav__logo img {
+        width: 170px!important;
+    }
+}
+
+p.p3,
+p.p1,
+p.p2,
+ul.p1 {
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #777373;
+}
+
+.info__description ul li {
+    list-style-type: disc;
+    margin-left: 35px;
+    font-weight: 500;
+    color: #777373;
+}
+
+.info__description ul {
+    margin-top: 8px;
+}
+.info__description h3 {
+    margin: 12px 0;
+}
+span.s1 {
+    font-weight: 500;
+    color: #777373;
 }

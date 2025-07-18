@@ -2,7 +2,7 @@
 
 @section('content')
     <header class="header">
-        <video src="{{ asset('assets/index/header-bg.mp4') }}" autoplay loop muted class="header__bg"></video>
+        <video src="{{ asset('assets/index/header-bg.mp4') }}?v={{ time() }}" autoplay loop muted class="header__bg"></video>
         <div class="header__content">
             <h1 class="header__title">{{ $page->hero_title ?? 'Get set for an electric future' }}</h1>
             <button class="header__button circleBg-btn">
@@ -23,11 +23,11 @@
 
     <section class="future-proof">
         <h2 class="future-proof__title">{{ $content['future_proof']['title'] ?? 'Future-proof your residential site or business with our scalable EV charging solutions' }}</h2>
-        <img class="future-proof__img" src="{{ asset('assets/index/future-proof.png') }}">
+        <img class="future-proof__img" src="{{ asset('assets/index/home-1.jpg') }}">
     </section>
 
     <section class="solutions">
-        <p class="solutions__title">{{ __('Charging solutions for') }}</p>
+        <p class="solutions__title">{{ __('Solutions for') }}</p>
         <div class="solutions__items">
             @php
                 // Получаем страницы решений из базы данных
@@ -55,9 +55,9 @@
             @endforeach
         </div>
         <div class="help__slider">
-            <img src="{{ asset('assets/help_slides/expertise.png') }}" class="help__slide active" data-tab="expertise">
-            <img src="{{ asset('assets/help_slides/guidance.png') }}" class="help__slide" data-tab="guidance">
-            <img src="{{ asset('assets/help_slides/support.png') }}" class="help__slide" data-tab="support">
+            <img src="{{ asset('assets/help_slides/frequency.jpeg') }}" class="help__slide active" data-tab="expertise">
+            <img src="{{ asset('assets/help_slides/grid.jpeg') }}" class="help__slide" data-tab="guidance">
+            <img src="{{ asset('assets/help_slides/arbitrage.jpeg') }}" class="help__slide" data-tab="support">
         </div>
         <div class="help__info">
             <p class="help__title">{{ $content['help']['title'] ?? 'How we can help' }}</p>
@@ -88,20 +88,20 @@
         </div>
     </section>
 
-    <section class="products">
+    <!-- <section class="products">
         <div class="section-grid">
             <p></p>
             <h2 class="products__title">{{ $content['products']['title'] ?? 'We offer a range of charge points to choose from.' }}</h2>
         </div>
         <div class="products-slider drag-slider swiper">
             <div class="swiper-wrapper" id="products-wrapper">
-                <!-- Products will be loaded here -->
+
             </div>
             <div class="swiper-pagination"></div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
-    </section>
+    </section> -->
 
     <section class="partners">
         <div class="section-grid">
@@ -113,8 +113,17 @@
                 <!-- Partners will be loaded here -->
             </div>
         </div>
+
+        <div class="rellax-wrapper">
+            <div class="clip-mask">
+                <div class="rellax" data-rellax-speed="-3">
+                    <img src="{{ asset('assets/about/about-4.jpeg') }}" />
+                </div>
+            </div>
+        </div>
+
         <div class="section-grid partners__info">
-            <p>{{ $content['partners']['drag_text'] ?? 'Drag slider' }}</p>
+            <p class="p-margin">{{ $content['partners']['drag_text'] ?? 'Drag slider' }}</p>
             <div class="partners__description">
                 <p class="section-subtitle">{{ $content['partners']['description_subtitle'] ?? 'EV charging solutions for residential sites and businesses' }}</p>
                 <p class="section-text">{{ $content['partners']['description_text'] ?? '' }}</p>
@@ -223,5 +232,32 @@
         });
     </script>
     <script src="{{ asset('js/index.js') }}"></script>
+    <style>
+        h1.header__title:lang(lv) {
+          font-size: 54px;
+          line-height: 64px;
+        }
+        .rellax-wrapper {
+            margin-bottom: 50px;
+        }
+        .get-started {
+            margin-top: 0;
+        }
+        section.partners {
+            margin-bottom: 0;
+        }
+        .partners__info .p-margin {
+            margin-top: 172px;
+        }
+        section.partners {
+            padding: 20px 0;
+        }
+        .section-text {
+            color: #777373;
+        }
+        section.partners .section-grid {
+            padding: 40px;
+        }
+    </style>
     @endpush
 @endsection

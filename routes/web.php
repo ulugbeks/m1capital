@@ -32,14 +32,21 @@ Route::prefix('{locale}')
         
         // Новости
         Route::get('/news', [NewsController::class, 'index'])->name('news.index');
-        Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+        Route::get('/news/{news:slug}', [NewsController::class, 'show'])->name('news.show');
         
-        // Статические страницы
-        Route::get('/about', [PageController::class, 'show'])->name('about');
-        Route::get('/contact', [PageController::class, 'show'])->name('contact');
+        // Контактная форма
         Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
-        Route::get('/how-we-work', [PageController::class, 'show'])->name('how-we-work');
+        
+        // Статические страницы - должны быть в конце
+        Route::get('/{slug}', [PageController::class, 'show'])
+            ->where('slug', 'about|contact|how-we-work')
+            ->name('page');
     });
+
+// Для обратной совместимости имен маршрутов
+Route::name('about')->get('/{locale}/about', function() {});
+Route::name('contact')->get('/{locale}/contact', function() {});
+Route::name('how-we-work')->get('/{locale}/how-we-work', function() {});
 
 // Админ панель - авторизация
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login');

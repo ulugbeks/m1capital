@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Page;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -18,7 +19,7 @@ class NewsController extends Controller
         return view('news.index', compact('news', 'page'));
     }
 
-    public function show(News $news)
+    public function show($locale, News $news)
     {
         if (!$news->is_published || $news->published_at > now()) {
             abort(404);
