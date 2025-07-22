@@ -5,7 +5,7 @@
         <div class="header__content">
             <h1 class="header__title">{{ $solution->hero_title ?? $solution->title }}</h1>
             <button class="header__button circleBg-btn">
-                <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
+                <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
                     <span>{{ $content['button_text'] ?? 'Contact us' }}</span>
                     <div class="_i_bg"></div>
                     <i class="fa-solid fa-arrow-right"></i>
@@ -18,13 +18,14 @@
 
     @php
         $content = $solution->content;
+        $translation = $solution->translate(app()->getLocale());
     @endphp
 
-    @if(isset($content['show_rellax']) && $content['show_rellax'])
+    @if(isset($content['show_rellax']) && $content['show_rellax'] && $translation->rellax_image)
     <div class="rellax-wrapper">
         <div class="clip-mask">
             <div class="rellax" data-rellax-speed="-3">
-                <img src="{{ asset('assets/solutions-page/apartment-buildings/1.png') }}" />
+                <img src="{{ asset('storage/' . $translation->rellax_image) }}" alt="{{ $solution->title }}" />
             </div>
         </div>
     </div>
@@ -33,15 +34,15 @@
     <div class="section-grid info">
         <div class="info__description section-description">
             <h3 class="info__title">{{ $content['info']['title'] ?? '' }}</h3>
-            <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}" class="section-subtitle underline-anim">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}" class="section-subtitle underline-anim">
                 {{ $content['info']['link_text'] ?? 'Ready to get started? Contact us' }}
             </a>
             <div class="section-text">
                 {!! $content['info']['content'] ?? '' !!}
             </div>
         </div>
-        @if(isset($content['info']['show_image']) && $content['info']['show_image'])
-            <img src="{{ asset('assets/solutions/' . $solution->slug . '/2.png') }}" class="info__img">
+        @if(isset($content['info']['show_image']) && $content['info']['show_image'] && $translation->info_image)
+            <img src="{{ asset('storage/' . $translation->info_image) }}" class="info__img" alt="{{ $solution->title }}">
         @endif
     </div>
 
@@ -78,11 +79,11 @@
     </section>
     @endif
 
-    @if(isset($content['show_rellax_mini']) && $content['show_rellax_mini'])
+    @if(isset($content['show_rellax_mini']) && $content['show_rellax_mini'] && $translation->rellax_mini_image)
     <div class="rellax-wrapper mini">
         <div class="clip-mask">
             <div class="rellax" data-rellax-speed="-3">
-                <img src="{{ asset('assets/solutions/' . $solution->slug . '/3.png') }}" />
+                <img src="{{ asset('storage/' . $translation->rellax_mini_image) }}" alt="{{ $solution->title }}" />
             </div>
         </div>
     </div>
@@ -143,7 +144,7 @@
     <section class="get-started">
         <h2 class="get-started__title">{!! $content['get_started']['title'] ?? 'Ready to get <br> started?' !!}</h2>
         <button class="circleBg-btn get-started__button">
-            <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
                 <span>{{ $content['get_started']['button_text'] ?? 'Contact us' }}</span>
                 <div class="_i_bg"></div>
                 <i class="fa-solid fa-arrow-right"></i>
@@ -193,7 +194,7 @@
     @endpush
 
     @push('scripts')
-        @if((isset($content['show_rellax']) && $content['show_rellax']) || (isset($content['show_rellax_mini']) && $content['show_rellax_mini']))
+        @if((isset($content['show_rellax']) && $content['show_rellax'] && $translation->rellax_image) || (isset($content['show_rellax_mini']) && $content['show_rellax_mini'] && $translation->rellax_mini_image))
         <script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"></script>
         @endif
         <script src="{{ asset('js/additional.js') }}"></script>
@@ -213,7 +214,7 @@
                 @endforeach
             };
 
-            @if((isset($content['show_rellax']) && $content['show_rellax']) || (isset($content['show_rellax_mini']) && $content['show_rellax_mini']))
+            @if((isset($content['show_rellax']) && $content['show_rellax'] && $translation->rellax_image) || (isset($content['show_rellax_mini']) && $content['show_rellax_mini'] && $translation->rellax_mini_image))
             // Инициализация Rellax
             var rellax = new Rellax('.rellax');
             @endif

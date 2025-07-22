@@ -10,3 +10,17 @@ if (!function_exists('setting')) {
         });
     }
 }
+
+if (!function_exists('storage_url')) {
+    function storage_url($path)
+    {
+        if (empty($path)) {
+            return null;
+        }
+        
+        // Убираем storage/ если он есть в начале пути
+        $path = preg_replace('/^storage\//', '', $path);
+        
+        return url('storage/' . ltrim($path, '/'));
+    }
+}

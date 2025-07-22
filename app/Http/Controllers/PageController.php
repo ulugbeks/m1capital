@@ -12,7 +12,7 @@ class PageController extends Controller
     public function show($locale, $slug = null)
     {
         // Если slug не передан, но locale на самом деле является slug
-        if ($slug === null && in_array($locale, ['about', 'contact', 'how-we-work'])) {
+        if ($slug === null && in_array($locale, ['about', 'contact', 'how-we-work', 'terms', 'privacy', 'cookies'])) {
             $slug = $locale;
             $locale = app()->getLocale();
         }
@@ -24,6 +24,7 @@ class PageController extends Controller
             'about' => 'pages.about',
             'contact' => 'pages.contact',
             'how-we-work' => 'pages.how-we-work',
+            'terms', 'privacy', 'cookies' => 'pages.legal',
             default => 'pages.default'
         };
         

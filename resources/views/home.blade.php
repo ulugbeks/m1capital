@@ -134,7 +134,7 @@
     <section class="get-started">
         <h2 class="get-started__title">{!! $content['get_started']['title'] ?? 'Ready to get <br> started?' !!}</h2>
         <button class="circleBg-btn get-started__button">
-            <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
                 <span>{{ $content['get_started']['button_text'] ?? 'Contact us' }}</span>
                 <div class="_i_bg"></div>
                 <i class="fa-solid fa-arrow-right"></i>

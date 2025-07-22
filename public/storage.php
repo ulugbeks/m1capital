@@ -1,26 +1,33 @@
 <?php
-// public/storage.php
+/**
+ * Storage file handler for servers without symlink support
+ */
 
-// Получаем путь к файлу
-$requestUri = $_SERVER['REQUEST_URI'];
-$filePath = str_replace('/storage/', '', parse_url($requestUri, PHP_URL_PATH));
+// Get the requested path
+$path = isset($_GET['path']) ? $_GET['path'] : '';
+$path = trim($path, '/');
 
-// Полный путь к файлу в storage
-$fullPath = __DIR__ . '/../storage/app/public/' . $filePath;
+// Security: prevent directory traversal
+$path = str_replace(['..', '//'], '', $path);
 
-// Проверяем существование файла
-if (!file_exists($fullPath)) {
-    header('HTTP/1.0 404 Not Found');
+// Build the full path to the file
+$filePath = __DIR__ . '/../storage/app/public/' . $path;
+
+// Check if file exists
+if (!file_exists($filePath) || is_dir($filePath)) {
+    http_response_code(404);
     exit('File not found');
 }
 
-// Определяем MIME тип
-$mimeType = mime_content_type($fullPath);
+// Get the file info
+$mimeType = mime_content_type($filePath);
+$fileSize = filesize($filePath);
 
-// Отправляем заголовки
+// Set appropriate headers
 header('Content-Type: ' . $mimeType);
-header('Content-Length: ' . filesize($fullPath));
+header('Content-Length: ' . $fileSize);
 header('Cache-Control: public, max-age=31536000');
 
-// Отправляем файл
-readfile($fullPath);
+// Output the file
+readfile($filePath);
+exit;

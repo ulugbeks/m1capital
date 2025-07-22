@@ -17,9 +17,9 @@
             <div class="footer__column">
                 <p class="footer__subtitle">{{ __('Navigation') }}</p>
                 <ul class="footer__list">
-                    <li class="footer__link"><a href="{{ route('about', ['locale' => app()->getLocale(), 'slug' => 'about']) }}">{{ __('About us') }}</a></li>
+                    <li class="footer__link"><a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'about']) }}">{{ __('About us') }}</a></li>
                     <li class="footer__link"><a href="{{ route('solutions', app()->getLocale()) }}">{{ __('Solutions') }}</a></li>
-                    <li class="footer__link"><a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">{{ __('Contact') }}</a></li>
+                    <li class="footer__link"><a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">{{ __('Contact') }}</a></li>
                 </ul>
             </div>
             <div class="footer__column">
@@ -27,6 +27,14 @@
                 <ul class="footer__list">
                     <li class="footer__link"><a href="{{ \App\Models\Setting::get('linkedin', 'https://www.linkedin.com/company/energypark') }}" target="_blank">LinkedIn</a></li>
                     <li class="footer__link"><a href="{{ \App\Models\Setting::get('instagram', 'https://www.instagram.com/energy.park/') }}" target="_blank">Instagram</a></li>
+                </ul>
+            </div>
+            <div class="footer__column">
+                <p class="footer__subtitle">{{ __('Useful links') }}</p>
+                <ul class="footer__list">
+                    <li class="footer__link"><a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'terms']) }}">{{ __('Terms & Conditions') }}</a></li>
+                    <li class="footer__link"><a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'privacy']) }}">{{ __('Privacy Policy') }}</a></li>
+                    <li class="footer__link"><a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'cookies']) }}">{{ __('Cookies') }}</a></li>
                 </ul>
             </div>
         </div>

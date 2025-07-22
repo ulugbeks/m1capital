@@ -56,6 +56,11 @@ class PageController extends Controller
                 ];
             } elseif ($page->type === 'solution') {
                 $content = $this->getSolutionPageContent($request, $locale);
+            } elseif ($page->type === 'legal') {
+                // Для legal страниц сохраняем HTML контент
+                $content = [
+                    'main_content' => $request->input("content.{$locale}.main_content")
+                ];
             } else {
                 $content = $request->input("content.{$locale}", []);
             }

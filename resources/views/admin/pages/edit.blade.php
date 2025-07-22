@@ -5,7 +5,7 @@
         <div class="p-6 bg-white border-b border-gray-200">
             <h1 class="text-2xl font-bold mb-6">Edit Page: {{ $page->title }}</h1>
             
-            <form action="{{ route('admin.pages.update', $page) }}" method="POST">
+            <form action="{{ route('admin.pages.update', $page) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 
@@ -34,7 +34,7 @@
                         <!-- Basic Fields -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                Page Title
+                                SEO Page Title
                             </label>
                             <input type="text" 
                                    name="title[{{ $locale }}]" 
@@ -45,7 +45,7 @@
                         <!-- SEO Fields -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                Meta Title
+                                SEO Meta Title
                             </label>
                             <input type="text" 
                                    name="meta_title[{{ $locale }}]" 
@@ -55,7 +55,7 @@
                         
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                Meta Description
+                               SEO Meta Description
                             </label>
                             <textarea name="meta_description[{{ $locale }}]" 
                                       rows="3"
@@ -71,7 +71,7 @@
                             <!-- Home Page Specific Fields -->
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Hero Title
+                                    Slide Title
                                 </label>
                                 <input type="text" 
                                        name="hero_title[{{ $locale }}]" 
@@ -81,7 +81,7 @@
                             
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Hero Subtitle
+                                    Slide Subtitle
                                 </label>
                                 <input type="text" 
                                        name="hero_subtitle[{{ $locale }}]" 
@@ -90,12 +90,12 @@
                             </div>
                             
                             <!-- Home Page Sections -->
-                            <h4 class="text-md font-semibold mt-6 mb-4">Page Sections</h4>
+                            <h4 class="text-md font-semibold mt-6 mb-4">Section 1</h4>
                             
                             <!-- Future Proof Section -->
                             <div class="mb-4 p-4 bg-gray-50 rounded">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Future Proof Title
+                                    Section 1 Title
                                 </label>
                                 <textarea name="content[{{ $locale }}][future_proof][title]" 
                                           rows="2"
@@ -104,7 +104,28 @@
                             
                             <!-- Help Section -->
                             <div class="mb-4 p-4 bg-gray-50 rounded">
-                                <h5 class="font-medium mb-2">Help Section</h5>
+                                <h5 class="font-medium mb-2">Section 2</h5>
+                                <input type="text" 
+                                       name="content[{{ $locale }}][help][title]" 
+                                       value="{{ old('content.'.$locale.'.help.title', $content['help']['title'] ?? '') }}"
+                                       class="w-full border-gray-300 rounded-md shadow-sm mb-4">
+                                <!-- Tab Names -->
+                                <div class="mt-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Slide Tab Names</label>
+                                    @foreach(['expertise', 'guidance', 'support'] as $tabIndex => $tabKey)
+                                        <div class="mb-2">
+                                            <label class="block text-xs text-gray-600 mb-1">Tab {{ $tabIndex + 1 }}</label>
+                                            <input type="text" 
+                                                   name="content[{{ $locale }}][help][tabs][{{ $tabIndex }}][title]" 
+                                                   value="{{ old('content.'.$locale.'.help.tabs.'.$tabIndex.'.title', $content['help']['tabs'][$tabIndex]['title'] ?? ucfirst($tabKey)) }}"
+                                                   class="w-full border-gray-300 rounded-md shadow-sm">
+                                            <input type="hidden" 
+                                                   name="content[{{ $locale }}][help][tabs][{{ $tabIndex }}][key]" 
+                                                   value="{{ $tabKey }}">
+                                        </div>
+                                    @endforeach
+                                </div>
+
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     Section Title
                                 </label>
@@ -113,7 +134,7 @@
                                        value="{{ old('content.'.$locale.'.help.title', $content['help']['title'] ?? '') }}"
                                        class="w-full border-gray-300 rounded-md shadow-sm mb-4">
                                 
-                                @for($i = 0; $i < 3; $i++)
+                                <!-- @for($i = 0; $i < 3; $i++)
                                     <div class="mb-3 p-3 bg-white rounded border">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Item {{ $i + 1 }} Title</label>
                                         <input type="text" 
@@ -134,30 +155,15 @@
                                                name="content[{{ $locale }}][help][items][{{ $i }}][tab_key]" 
                                                value="{{ $content['help']['items'][$i]['tab_key'] ?? ['expertise', 'guidance', 'support'][$i] }}">
                                     </div>
-                                @endfor
+                                @endfor -->
                                 
-                                <!-- Tab Names -->
-                                <div class="mt-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tab Names</label>
-                                    @foreach(['expertise', 'guidance', 'support'] as $tabIndex => $tabKey)
-                                        <div class="mb-2">
-                                            <label class="block text-xs text-gray-600 mb-1">Tab {{ $tabIndex + 1 }}</label>
-                                            <input type="text" 
-                                                   name="content[{{ $locale }}][help][tabs][{{ $tabIndex }}][title]" 
-                                                   value="{{ old('content.'.$locale.'.help.tabs.'.$tabIndex.'.title', $content['help']['tabs'][$tabIndex]['title'] ?? ucfirst($tabKey)) }}"
-                                                   class="w-full border-gray-300 rounded-md shadow-sm">
-                                            <input type="hidden" 
-                                                   name="content[{{ $locale }}][help][tabs][{{ $tabIndex }}][key]" 
-                                                   value="{{ $tabKey }}">
-                                        </div>
-                                    @endforeach
-                                </div>
+                                
                             </div>
                             
                             <!-- Solutions Ad Section -->
                             <div class="mb-4 p-4 bg-gray-50 rounded">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Solutions Ad Title
+                                    Banner text
                                 </label>
                                 <textarea name="content[{{ $locale }}][solutions_ad][title]" 
                                           rows="2"
@@ -165,7 +171,7 @@
                             </div>
                             
                             <!-- Products Section -->
-                            <div class="mb-4 p-4 bg-gray-50 rounded">
+                            <!-- <div class="mb-4 p-4 bg-gray-50 rounded">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     Products Section Title
                                 </label>
@@ -174,11 +180,11 @@
                                        value="{{ old('content.'.$locale.'.products.title', $content['products']['title'] ?? '') }}"
                                        class="w-full border-gray-300 rounded-md shadow-sm">
                                 <p class="text-sm text-gray-500 mt-1">Products are managed separately in the Products section.</p>
-                            </div>
+                            </div> -->
                             
                             <!-- Partners Section -->
                             <div class="mb-4 p-4 bg-gray-50 rounded">
-                                <h5 class="font-medium mb-2">Partners Section</h5>
+                                <h5 class="font-medium mb-2">Section 4</h5>
                                 
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
                                 <input type="text" 
@@ -208,12 +214,12 @@
                                           rows="3"
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.partners.description_text', $content['partners']['description_text'] ?? '') }}</textarea>
                                 
-                                <p class="text-sm text-gray-500 mt-1">Partner logos are managed separately in the Partners section.</p>
+                                <!-- <p class="text-sm text-gray-500 mt-1">Partner logos are managed separately in the Partners section.</p> -->
                             </div>
                             
                             <!-- Get Started Section -->
                             <div class="mb-4 p-4 bg-gray-50 rounded">
-                                <h5 class="font-medium mb-2">Get Started Section</h5>
+                                <h5 class="font-medium mb-2">Section 5</h5>
                                 
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
                                 <textarea name="content[{{ $locale }}][get_started][title]" 
@@ -257,6 +263,89 @@
                                 <textarea name="hero_subtitle[{{ $locale }}]" 
                                           rows="2"
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('hero_subtitle.'.$locale, $page->translate($locale)->hero_subtitle ?? '') }}</textarea>
+                            </div>
+                            
+                            <!-- Images Section for Solutions -->
+                            <div class="mb-6 p-4 bg-yellow-50 rounded border border-yellow-200">
+                                <h5 class="font-medium mb-4 text-yellow-900">📸 Images Management</h5>
+                                
+                                <!-- Rellax Image -->
+                                <div class="mb-4 p-3 bg-white rounded">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Top Parallax Image (Rellax)
+                                    </label>
+                                    @if($page->translate($locale)->rellax_image ?? null)
+                                        <div class="mb-3">
+                                            <img src="{{ asset('storage/' . $page->translate($locale)->rellax_image) }}" 
+                                                 alt="Rellax Image" 
+                                                 class="h-32 w-auto rounded shadow">
+                                            <label class="flex items-center mt-2 text-red-600">
+                                                <input type="checkbox" 
+                                                       name="delete_rellax_image[{{ $locale }}]" 
+                                                       value="1" 
+                                                       class="mr-2">
+                                                <span class="text-sm">Delete this image</span>
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" 
+                                           name="rellax_image[{{ $locale }}]" 
+                                           accept="image/*"
+                                           class="w-full">
+                                    <p class="text-xs text-gray-500 mt-1">This image appears at the top with parallax effect when "Show parallax image at top" is checked</p>
+                                </div>
+                                
+                                <!-- Info Section Image -->
+                                <div class="mb-4 p-3 bg-white rounded">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Info Section Image
+                                    </label>
+                                    @if($page->translate($locale)->info_image ?? null)
+                                        <div class="mb-3">
+                                            <img src="{{ asset('storage/' . $page->translate($locale)->info_image) }}" 
+                                                 alt="Info Image" 
+                                                 class="h-32 w-auto rounded shadow">
+                                            <label class="flex items-center mt-2 text-red-600">
+                                                <input type="checkbox" 
+                                                       name="delete_info_image[{{ $locale }}]" 
+                                                       value="1" 
+                                                       class="mr-2">
+                                                <span class="text-sm">Delete this image</span>
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" 
+                                           name="info_image[{{ $locale }}]" 
+                                           accept="image/*"
+                                           class="w-full">
+                                    <p class="text-xs text-gray-500 mt-1">This image appears in the info section when "Show image" is checked</p>
+                                </div>
+                                
+                                <!-- Rellax Mini Image -->
+                                <div class="mb-4 p-3 bg-white rounded">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Mini Parallax Image
+                                    </label>
+                                    @if($page->translate($locale)->rellax_mini_image ?? null)
+                                        <div class="mb-3">
+                                            <img src="{{ asset('storage/' . $page->translate($locale)->rellax_mini_image) }}" 
+                                                 alt="Rellax Mini Image" 
+                                                 class="h-32 w-auto rounded shadow">
+                                            <label class="flex items-center mt-2 text-red-600">
+                                                <input type="checkbox" 
+                                                       name="delete_rellax_mini_image[{{ $locale }}]" 
+                                                       value="1" 
+                                                       class="mr-2">
+                                                <span class="text-sm">Delete this image</span>
+                                            </label>
+                                        </div>
+                                    @endif
+                                    <input type="file" 
+                                           name="rellax_mini_image[{{ $locale }}]" 
+                                           accept="image/*"
+                                           class="w-full">
+                                    <p class="text-xs text-gray-500 mt-1">This image appears below the products section when "Show mini parallax image" is checked</p>
+                                </div>
                             </div>
                             
                             <!-- Display Settings -->
@@ -387,7 +476,7 @@
                             </div>
                             
                             <!-- Products Section -->
-                            <div class="mb-4 p-4 bg-gray-50 rounded">
+                            <!-- <div class="mb-4 p-4 bg-gray-50 rounded">
                                 <h5 class="font-medium mb-2">Products Section</h5>
                                 
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
@@ -402,7 +491,7 @@
                                           class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.products.title', $content['products']['title'] ?? '') }}</textarea>
                                 
                                 <p class="text-sm text-gray-500">Products are managed separately in the Products section.</p>
-                            </div>
+                            </div> -->
                             
                             <!-- FAQ Section -->
                             <div class="mb-4 p-4 bg-gray-50 rounded">
@@ -742,6 +831,18 @@
                                     @endforeach
                                 </div>
                             @endif
+
+                            @elseif($page->type === 'legal')
+                                <!-- Legal Pages Content -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Page Content
+                                    </label>
+                                    <textarea name="content[{{ $locale }}][main_content]" 
+                                              rows="20"
+                                              class="w-full border-gray-300 rounded-md shadow-sm tinymce">{{ old('content.'.$locale.'.main_content', $content['main_content'] ?? '') }}</textarea>
+                                    <p class="text-sm text-gray-500 mt-1">Use the rich text editor to format your legal content. You can add headings, lists, links, and other formatting.</p>
+                                </div>
                             
                         @else
                             <!-- Generic Page Content -->

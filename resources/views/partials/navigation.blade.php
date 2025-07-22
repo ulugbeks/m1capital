@@ -37,11 +37,7 @@
                             <span class="underline-anim">{{ __('News') }}</span>
                         </a>
                     </li>
-                    <li class="nav__item only-phone">
-                        <a href="{{ route('how-we-work', ['locale' => app()->getLocale(), 'slug' => 'how-we-work']) }}" class="nav__link">
-                            <span class="underline-anim">{{ __('How we work') }}</span>
-                        </a>
-                    </li>
+                    
                 </ul>
             </div>
         </div>

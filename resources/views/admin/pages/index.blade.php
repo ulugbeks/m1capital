@@ -62,7 +62,7 @@
                                     <a href="{{ route('admin.pages.edit', $page) }}" class="text-indigo-600 hover:text-indigo-900">
                                         Edit
                                     </a>
-                                    <a href="{{ route($page->slug === 'home' ? 'home' : ($page->type === 'solution' ? 'solution' : 'about'), ['locale' => 'en', 'slug' => $page->slug]) }}" 
+                                    <a href="{{ route($page->slug === 'home' ? 'home' : ($page->type === 'solution' ? 'solution' : 'page'), ['locale' => 'en', 'slug' => $page->slug]) }}" 
                                        target="_blank" 
                                        class="ml-4 text-gray-600 hover:text-gray-900">
                                         View

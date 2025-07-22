@@ -2,20 +2,21 @@
 
 @section('content')
     <header class="header">
+        <img src="{{ asset('assets/about/about-1.jpeg') }}" class="about-intro" />
         <div class="header__content">
-            <h1 class="header__title">{{ $page->hero_title }}</h1>
+            <h1 class="header__title" style="color: #fff!important">{{ $page->hero_title }}</h1>
             <h3 class="header__subtitle">{{ $page->hero_subtitle }}</h3>
         </div>
-        <p class="header__note">{{ __('Explore') }} <i class="fas fa-arrow-down"></i></p>
+        <p class="header__note" style="color: #fff!important">{{ __('Explore') }} <i class="fas fa-arrow-down" style="color: #fff!important"></i></p>
     </header>
 
-    <div class="rellax-wrapper">
+    <!-- <div class="rellax-wrapper">
         <div class="clip-mask">
             <div class="rellax" data-rellax-speed="-3">
                 <img src="{{ asset('assets/about/about-1.jpeg') }}" />
             </div>
         </div>
-    </div>
+    </div> -->
 
     @php
         $content = $page->content;
@@ -35,7 +36,7 @@
         <img src="{{ asset('assets/about/beach.jpeg') }}" class="info__img">
         <div class="info__description section-description">
             <h3 class="info__title">{{ $content['info2']['title'] ?? 'We\'ll help you find the best solution for your site.' }}</h3>
-            <a href="{{ route('contact', app()->getLocale()) }}" class="section-subtitle underline-anim">{{ $content['info2']['link_text'] ?? 'How we do it' }}</a>
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}" class="section-subtitle underline-anim">{{ $content['info2']['link_text'] ?? 'How we do it' }}</a>
             @foreach($content['info2']['paragraphs'] ?? [] as $paragraph)
                 <p class="section-text">{{ $paragraph }}</p>
             @endforeach
@@ -79,7 +80,7 @@
     <section class="get-started">
         <h2 class="get-started__title">{!! $content['get_started']['title'] ?? 'Ready to get <br> started?' !!}</h2>
         <button class="circleBg-btn get-started__button">
-            <a href="{{ route('contact', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
+            <a href="{{ route('page', ['locale' => app()->getLocale(), 'slug' => 'contact']) }}">
                 <span>{{ __('Contact us') }}</span>
                 <div class="_i_bg"></div>
                 <i class="fa-solid fa-arrow-right"></i>
@@ -96,6 +97,12 @@
         <style>
             .header__title, .header__subtitle, .header__note, .header__note i {
                 color: #000!important;
+            }
+            img.about-intro {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                filter: brightness(0.7);
             }
             @media (max-width: 576px) {
                 .header__title {

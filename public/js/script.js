@@ -19,15 +19,20 @@ const scrollConstVhs = 0.20;
 const scrollConst = window.innerHeight * scrollConstVhs;
 
 // Определяем, находимся ли мы на главной странице
-// Используем window.pageInfo если доступно (из Blade), иначе проверяем URL
-const isHomePage = window.pageInfo ? window.pageInfo.isHomePage : 
-    (page === '/' || page === '/en' || page === '/lv' || page === '/en/' || page === '/lv/');
+const isHomePage = page === '/' || page === '/en' || page === '/lv' || page === '/en/' || page === '/lv/';
+
+// Определяем, находимся ли мы на странице about
+const isAboutPage = page.includes('/about');
+
+// Объединяем проверку для страниц с особым поведением навигации
+const isSpecialNavPage = isHomePage || isAboutPage;
 
 // Отладочная информация
 console.log('Navigation initialized:', {
     pathname: page,
     isHomePage: isHomePage,
-    pageInfo: window.pageInfo || 'not available'
+    isAboutPage: isAboutPage,
+    isSpecialNavPage: isSpecialNavPage
 });
 
 function initScrollImgs() {
@@ -114,9 +119,9 @@ const toggleNav = () => {
 
     const scrollPos = window.scrollY;
 
-    // Логика только для главной страницы
-    if (isHomePage) {
-        // Если находимся в самом верху страницы (меньше 60px) и на главной странице
+    // Логика для главной страницы и страницы about
+    if (isSpecialNavPage) {
+        // Если находимся в самом верху страницы (меньше 60px) и на специальной странице
         if (scrollPos <= 60 && !isSubmenuOpened) {
             if (logoImg) logoImg.src = '/assets/logo_white_.svg';
             if (isPhone) {
@@ -176,8 +181,8 @@ document.addEventListener('scroll', () => {
 
 // Проверка начального состояния
 document.addEventListener('DOMContentLoaded', () => {
-    if (isHomePage) {
-        // Для главной страницы проверяем скролл
+    if (isSpecialNavPage) {
+        // Для главной страницы и страницы about проверяем скролл
         if (window.scrollY <= 60) {
             if (logoImg) logoImg.src = '/assets/logo_white_.svg';
             if (isPhone) {
