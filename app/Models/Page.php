@@ -27,7 +27,10 @@ class Page extends Model implements TranslatableContract
         'hero_subtitle',
         'card_title',
         'card_text',
-        'content'
+        'content',
+        'rellax_image',
+        'info_image',
+        'rellax_mini_image'
     ];
 
     protected $casts = [

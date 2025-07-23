@@ -61,7 +61,7 @@
 
                     <div class="flex items-center">
                         <span class="mr-4">{{ Auth::user()->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
                             <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">
                                 Logout

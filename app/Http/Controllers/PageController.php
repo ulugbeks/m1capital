@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
-use App\Models\Product;
 use App\Models\Partner;
 use Illuminate\Http\Request;
 
@@ -69,14 +68,6 @@ class PageController extends Controller
                        ->active()
                        ->firstOrFail();
         
-        // Загружаем продукты для этой страницы решения
-        $products = Product::active()
-                          ->whereHas('pages', function($query) use ($solution) {
-                              $query->where('page_id', $solution->id);
-                          })
-                          ->ordered()
-                          ->get();
-        
-        return view('pages.solution', compact('solution', 'products'));
+        return view('pages.solution', compact('solution'));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
@@ -38,6 +39,55 @@ class PageController extends Controller
             if ($page->type === 'solution') {
                 $page->translateOrNew($locale)->card_title = $request->input("card_title.{$locale}");
                 $page->translateOrNew($locale)->card_text = $request->input("card_text.{$locale}");
+                
+                // Обработка изображений для страниц решений
+                // Rellax Image
+                if ($request->hasFile("rellax_image.{$locale}")) {
+                    // Удаляем старое изображение
+                    if ($page->translate($locale)->rellax_image ?? null) {
+                        Storage::disk('public')->delete($page->translate($locale)->rellax_image);
+                    }
+                    
+                    $path = $request->file("rellax_image.{$locale}")->store('solution-images', 'public');
+                    $page->translateOrNew($locale)->rellax_image = $path;
+                } elseif ($request->input("delete_rellax_image.{$locale}")) {
+                    if ($page->translate($locale)->rellax_image ?? null) {
+                        Storage::disk('public')->delete($page->translate($locale)->rellax_image);
+                        $page->translateOrNew($locale)->rellax_image = null;
+                    }
+                }
+                
+                // Info Image
+                if ($request->hasFile("info_image.{$locale}")) {
+                    // Удаляем старое изображение
+                    if ($page->translate($locale)->info_image ?? null) {
+                        Storage::disk('public')->delete($page->translate($locale)->info_image);
+                    }
+                    
+                    $path = $request->file("info_image.{$locale}")->store('solution-images', 'public');
+                    $page->translateOrNew($locale)->info_image = $path;
+                } elseif ($request->input("delete_info_image.{$locale}")) {
+                    if ($page->translate($locale)->info_image ?? null) {
+                        Storage::disk('public')->delete($page->translate($locale)->info_image);
+                        $page->translateOrNew($locale)->info_image = null;
+                    }
+                }
+                
+                // Rellax Mini Image
+                if ($request->hasFile("rellax_mini_image.{$locale}")) {
+                    // Удаляем старое изображение
+                    if ($page->translate($locale)->rellax_mini_image ?? null) {
+                        Storage::disk('public')->delete($page->translate($locale)->rellax_mini_image);
+                    }
+                    
+                    $path = $request->file("rellax_mini_image.{$locale}")->store('solution-images', 'public');
+                    $page->translateOrNew($locale)->rellax_mini_image = $path;
+                } elseif ($request->input("delete_rellax_mini_image.{$locale}")) {
+                    if ($page->translate($locale)->rellax_mini_image ?? null) {
+                        Storage::disk('public')->delete($page->translate($locale)->rellax_mini_image);
+                        $page->translateOrNew($locale)->rellax_mini_image = null;
+                    }
+                }
             }
             
             // Сохраняем контент в зависимости от типа страницы
@@ -119,25 +169,10 @@ class PageController extends Controller
                 'title' => $request->input("content.{$locale}.info.title"),
                 'link_text' => $request->input("content.{$locale}.info.link_text"),
                 'content' => $request->input("content.{$locale}.info.content"),
-                'show_image' => $request->boolean("content.{$locale}.info.show_image")
             ],
             'deliver' => [
                 'title' => $request->input("content.{$locale}.deliver.title"),
-                'show_numbers' => $request->boolean("content.{$locale}.deliver.show_numbers"),
-                'items' => $request->input("content.{$locale}.deliver.items", [])
-            ],
-            'benefits' => [
-                'title' => $request->input("content.{$locale}.benefits.title"),
-                'items' => $request->input("content.{$locale}.benefits.items", [])
-            ],
-            'products' => [
-                'subtitle' => $request->input("content.{$locale}.products.subtitle"),
-                'title' => $request->input("content.{$locale}.products.title")
-            ],
-            'faq' => [
-                'title' => $request->input("content.{$locale}.faq.title"),
-                'subtitle' => $request->input("content.{$locale}.faq.subtitle"),
-                'items' => $request->input("content.{$locale}.faq.items", [])
+                'items' => []
             ],
             'get_started' => [
                 'title' => $request->input("content.{$locale}.get_started.title"),
@@ -147,7 +182,51 @@ class PageController extends Controller
             ]
         ];
         
+        // Обработка элементов deliver с изображениями
+        $deliverItems = $request->input("content.{$locale}.deliver.items", []);
+        foreach ($deliverItems as $index => $item) {
+            $itemData = [
+                'subtitle' => $item['subtitle'] ?? '',
+                'text' => $item['text'] ?? '',
+            ];
+            
+            // Сохраняем существующее изображение
+            $existingContent = $this->getExistingContent($request->route('page'), $locale);
+            if (isset($existingContent['deliver']['items'][$index]['image'])) {
+                $itemData['image'] = $existingContent['deliver']['items'][$index]['image'];
+            }
+            
+            // Проверяем, нужно ли удалить изображение
+            if ($request->input("content.{$locale}.deliver.items.{$index}.delete_image")) {
+                if (isset($itemData['image'])) {
+                    Storage::disk('public')->delete($itemData['image']);
+                    unset($itemData['image']);
+                }
+            }
+            
+            // Загружаем новое изображение
+            if ($request->hasFile("content.{$locale}.deliver.items.{$index}.image")) {
+                // Удаляем старое изображение
+                if (isset($itemData['image'])) {
+                    Storage::disk('public')->delete($itemData['image']);
+                }
+                
+                $path = $request->file("content.{$locale}.deliver.items.{$index}.image")->store('solution-items', 'public');
+                $itemData['image'] = $path;
+            }
+            
+            $content['deliver']['items'][] = $itemData;
+        }
+        
         return $content;
+    }
+    
+    private function getExistingContent($page, $locale)
+    {
+        if ($page && $page->translate($locale)) {
+            return $page->translate($locale)->content ?? [];
+        }
+        return [];
     }
     
     private function getAboutPageContent($request, $locale)
