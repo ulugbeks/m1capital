@@ -243,6 +243,9 @@
                 .solution-content__text {
                     font-size: 16px;
                 }
+                header {
+                    min-height: 15vh;
+                }
             }
             
             @media (max-width: 480px) {

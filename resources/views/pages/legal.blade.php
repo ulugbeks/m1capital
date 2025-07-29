@@ -112,7 +112,6 @@
             }
             
             .legal-content__wrapper a {
-                color: var(--color-accent);
                 text-decoration: underline;
                 transition: color 0.2s ease;
             }
@@ -138,6 +137,10 @@
                 background-color: #f8f9fa;
                 font-weight: 600;
                 color: #333;
+            }
+
+            .legal-content__wrapper li {
+                list-style: disc;
             }
             
             @media (max-width: 768px) {

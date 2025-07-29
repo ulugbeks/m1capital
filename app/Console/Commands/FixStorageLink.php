@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class FixStorageLink extends Command
 {
@@ -11,14 +12,14 @@ class FixStorageLink extends Command
      *
      * @var string
      */
-    protected $signature = 'storage:fix-link';
+    protected $signature = 'storage:fix-link {--force : Force recreation of storage link}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fix storage symbolic link issues';
+    protected $description = 'Fix storage symbolic link issues for Windows and Unix systems';
 
     /**
      * Execute the console command.
@@ -28,107 +29,113 @@ class FixStorageLink extends Command
         $publicPath = public_path('storage');
         $storagePath = storage_path('app/public');
         
-        // Проверяем, существует ли папка storage в public
-        if (file_exists($publicPath)) {
-            // Если это не символическая ссылка, а обычная папка
-            if (!is_link($publicPath)) {
-                $this->warn('Removing existing storage directory...');
-                // Удаляем папку рекурсивно
-                $this->deleteDirectory($publicPath);
-            } else {
-                // Если это символическая ссылка, удаляем её
-                $this->warn('Removing existing storage symlink...');
-                unlink($publicPath);
-            }
-        }
+        $this->info('Starting storage link fix...');
+        $this->info('Public path: ' . $publicPath);
+        $this->info('Storage path: ' . $storagePath);
         
-        // Создаем папку app/public если её нет
-        if (!file_exists($storagePath)) {
-            mkdir($storagePath, 0755, true);
+        // Ensure storage/app/public exists
+        if (!File::exists($storagePath)) {
+            File::makeDirectory($storagePath, 0755, true);
             $this->info('Created storage/app/public directory');
         }
         
-        // Пытаемся создать символическую ссылку
+        // Remove existing storage folder/link if force option is used
+        if ($this->option('force') && File::exists($publicPath)) {
+            if (File::isDirectory($publicPath) && !File::isLink($publicPath)) {
+                File::deleteDirectory($publicPath);
+                $this->warn('Removed existing storage directory');
+            } elseif (File::isLink($publicPath)) {
+                File::delete($publicPath);
+                $this->warn('Removed existing storage symlink');
+            }
+        }
+        
+        // Check if link already exists and works
+        if (File::exists($publicPath) && !$this->option('force')) {
+            $this->info('Storage link already exists. Use --force to recreate.');
+            return 0;
+        }
+        
+        // Try to create symbolic link
         try {
             if (PHP_OS_FAMILY === 'Windows') {
-                // Для Windows используем команду mklink
-                $command = 'mklink /D "' . $publicPath . '" "' . $storagePath . '"';
-                exec($command, $output, $returnCode);
-                
-                if ($returnCode !== 0) {
-                    throw new \Exception('Failed to create symlink on Windows');
-                }
+                // Windows-specific approach
+                $this->createWindowsLink($publicPath, $storagePath);
             } else {
-                // Для Unix-подобных систем
+                // Unix/Linux/Mac approach
                 symlink($storagePath, $publicPath);
+                $this->info('Storage link created successfully!');
             }
-            
-            $this->info('The storage link has been successfully created.');
         } catch (\Exception $e) {
-            // Если не удалось создать символическую ссылку, копируем содержимое
             $this->error('Failed to create symbolic link: ' . $e->getMessage());
-            $this->warn('Falling back to directory copy method...');
-            
-            // Создаем папку storage в public
-            if (!file_exists($publicPath)) {
-                mkdir($publicPath, 0755, true);
-            }
-            
-            // Копируем содержимое
-            $this->copyDirectory($storagePath, $publicPath);
-            $this->info('Storage directory has been copied to public folder.');
-            
-            // Создаем файл .gitignore
-            file_put_contents($publicPath . '/.gitignore', "*\n!.gitignore\n");
+            $this->warn('Falling back to copy method...');
+            $this->copyStorage($publicPath, $storagePath);
         }
         
         return 0;
     }
     
     /**
-     * Рекурсивно удаляет директорию
+     * Create symbolic link on Windows
      */
-    private function deleteDirectory($dir)
+    private function createWindowsLink($publicPath, $storagePath)
     {
-        if (!file_exists($dir)) {
-            return;
+        // Convert paths to Windows format
+        $publicPath = str_replace('/', '\\', $publicPath);
+        $storagePath = str_replace('/', '\\', $storagePath);
+        
+        // Try to create directory junction (doesn't require admin rights)
+        $command = 'mklink /J "' . $publicPath . '" "' . $storagePath . '"';
+        
+        $output = [];
+        $returnCode = null;
+        exec($command . ' 2>&1', $output, $returnCode);
+        
+        if ($returnCode === 0) {
+            $this->info('Windows junction created successfully!');
+        } else {
+            // Try symbolic link (requires admin rights)
+            $command = 'mklink /D "' . $publicPath . '" "' . $storagePath . '"';
+            exec($command . ' 2>&1', $output, $returnCode);
+            
+            if ($returnCode === 0) {
+                $this->info('Windows symbolic link created successfully!');
+            } else {
+                throw new \Exception('Failed to create Windows link. Output: ' . implode("\n", $output));
+            }
         }
-        
-        if (!is_dir($dir)) {
-            unlink($dir);
-            return;
-        }
-        
-        $files = array_diff(scandir($dir), ['.', '..']);
-        
-        foreach ($files as $file) {
-            $path = $dir . '/' . $file;
-            is_dir($path) ? $this->deleteDirectory($path) : unlink($path);
-        }
-        
-        rmdir($dir);
     }
     
     /**
-     * Рекурсивно копирует директорию
+     * Copy storage files as fallback
      */
-    private function copyDirectory($source, $destination)
+    private function copyStorage($publicPath, $storagePath)
     {
-        if (!is_dir($destination)) {
-            mkdir($destination, 0755, true);
+        if (!File::exists($publicPath)) {
+            File::makeDirectory($publicPath, 0755, true);
         }
         
-        $files = array_diff(scandir($source), ['.', '..']);
+        // Copy all files from storage to public
+        $files = File::allFiles($storagePath);
         
         foreach ($files as $file) {
-            $sourcePath = $source . '/' . $file;
-            $destPath = $destination . '/' . $file;
+            $relativePath = str_replace($storagePath . DIRECTORY_SEPARATOR, '', $file->getPathname());
+            $destinationPath = $publicPath . DIRECTORY_SEPARATOR . $relativePath;
             
-            if (is_dir($sourcePath)) {
-                $this->copyDirectory($sourcePath, $destPath);
-            } else {
-                copy($sourcePath, $destPath);
+            // Create directory if it doesn't exist
+            $destinationDir = dirname($destinationPath);
+            if (!File::exists($destinationDir)) {
+                File::makeDirectory($destinationDir, 0755, true);
             }
+            
+            // Copy file
+            File::copy($file->getPathname(), $destinationPath);
         }
+        
+        // Create .gitignore
+        File::put($publicPath . '/.gitignore', "*\n!.gitignore\n");
+        
+        $this->info('Storage files copied successfully!');
+        $this->warn('Note: You will need to run this command again when new files are uploaded.');
     }
 }

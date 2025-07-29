@@ -488,9 +488,12 @@
                 hideBanner();
             });
             
-            savePreferencesBtn.addEventListener('click', function() {
-                cookieSettingsModal.style.display = 'flex';
-            });
+            // Find this code and update it:
+            if (savePreferencesBtn) {
+                savePreferencesBtn.addEventListener('click', function() {
+                    cookieSettingsModal.style.display = 'flex';
+                });
+            }
             
             saveSettingsBtn.addEventListener('click', function() {
                 const preferences = {

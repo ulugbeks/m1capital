@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="section-grid footer__top">
         <div class="footer__logo">
-            <img src="{{ asset('assets/logo_black_.svg') }}" alt="">
+            <img src="{{ asset('assets/m1-logo-black.svg') }}" alt="">
         </div>
         <div class="foooter__contacts">
             <a href="tel:{{ \App\Models\Setting::get('phone', '020 3345 3310') }}" class="underline-anim">{{ \App\Models\Setting::get('phone', '020 3345 3310') }}</a>

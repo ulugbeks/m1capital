@@ -103,11 +103,15 @@
                 width: 100%;
                 height: 100%;
                 filter: brightness(0.7);
+                object-fit: cover;
             }
             @media (max-width: 576px) {
                 .header__title {
                     font-size: 55px;
                     line-height: 65px;
+                }
+                img.about-intro {
+                    object-fit: cover;
                 }
             }
         </style>

@@ -35,7 +35,7 @@
 
 .contact__form label {
     font-size: var(--fs-body);
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .contact__checkbox {
@@ -75,6 +75,18 @@
 
 .contact__button._hover-wait {
     --fg: var(--color-fg);
+}
+
+.input-wrap {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 25px;
+}
+
+.input-group input {
+    width: 21vw;
+    margin-top: 10px;
 }
 
 

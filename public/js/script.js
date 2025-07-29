@@ -118,38 +118,26 @@ const toggleNav = () => {
     if (isModalOpened) return;
 
     const scrollPos = window.scrollY;
+    const phoneLogo = document.querySelector('.nav__phone img');
 
     // Логика для главной страницы и страницы about
     if (isSpecialNavPage) {
         // Если находимся в самом верху страницы (меньше 60px) и на специальной странице
         if (scrollPos <= 60 && !isSubmenuOpened) {
-            if (logoImg) logoImg.src = '/assets/logo_white_.svg';
-            if (isPhone) {
-                const phoneLogo = document.querySelector('.nav__phone img');
-                if (phoneLogo) phoneLogo.src = '/assets/logo_white_.svg';
-            }
+            if (logoImg) logoImg.src = '/assets/m1-logo-light.svg';
+            if (phoneLogo) phoneLogo.src = '/assets/m1-logo-light.svg';
             nav.classList.remove('active', 'hidden');
         } else {
             // При любом скролле больше 60px добавляем active класс
-            if (!isPhone && logoImg) {
-                logoImg.src = '/assets/black_new.svg';
-            }
-            if (isPhone) {
-                const phoneLogo = document.querySelector('.nav__phone img');
-                if (phoneLogo) phoneLogo.src = '/assets/black_new.svg';
-            }
+            if (logoImg) logoImg.src = '/assets/m1-logo-black.svg';
+            if (phoneLogo) phoneLogo.src = '/assets/m1-logo-black.svg';
             nav.classList.add('active');
             nav.classList.remove('hidden');
         }
     } else {
         // Для всех остальных страниц - всегда active
-        if (!isPhone && logoImg) {
-            logoImg.src = '/assets/black_new.svg';
-        }
-        if (isPhone) {
-            const phoneLogo = document.querySelector('.nav__phone img');
-            if (phoneLogo) phoneLogo.src = '/assets/black_new.svg';
-        }
+        if (logoImg) logoImg.src = '/assets/m1-logo-black.svg';
+        if (phoneLogo) phoneLogo.src = '/assets/m1-logo-black.svg';
         nav.classList.add('active');
         nav.classList.remove('hidden');
     }
@@ -181,27 +169,21 @@ document.addEventListener('scroll', () => {
 
 // Проверка начального состояния
 document.addEventListener('DOMContentLoaded', () => {
+    const phoneLogo = document.querySelector('.nav__phone img');
+    
     if (isSpecialNavPage) {
         // Для главной страницы и страницы about проверяем скролл
         if (window.scrollY <= 60) {
-            if (logoImg) logoImg.src = '/assets/logo_white_.svg';
-            if (isPhone) {
-                const phoneLogo = document.querySelector('.nav__phone img');
-                if (phoneLogo) phoneLogo.src = '/assets/logo_white_.svg';
-            }
+            if (logoImg) logoImg.src = '/assets/m1-logo-light.svg';
+            if (phoneLogo) phoneLogo.src = '/assets/m1-logo-light.svg';
             nav.classList.remove('active', 'hidden');
         } else {
             toggleNav();
         }
     } else {
         // Для всех остальных страниц сразу делаем навигацию активной
-        if (!isPhone && logoImg) {
-            logoImg.src = '/assets/black_new.svg';
-        }
-        if (isPhone) {
-            const phoneLogo = document.querySelector('.nav__phone img');
-            if (phoneLogo) phoneLogo.src = '/assets/black_new.svg';
-        }
+        if (logoImg) logoImg.src = '/assets/m1-logo-black.svg';
+        if (phoneLogo) phoneLogo.src = '/assets/m1-logo-black.svg';
         nav.classList.add('active');
     }
 });

@@ -2,7 +2,7 @@
     <div class="nav__top-bar"></div>
     <div class="nav__phone only-phone">
         <a href="{{ route('home', app()->getLocale()) }}" class="logo__link">
-            <img src="{{ asset('assets/logo_white.svg') }}?v={{ time() }}" alt="">
+            <img src="{{ asset('assets/m1-logo-light.svg') }}?v={{ time() }}" alt="">
         </a>
         <span id="nav_open">{{ __('Menu') }}</span>
     </div>
@@ -10,7 +10,7 @@
         <div class="nav__left">
             <div class="nav__logo">
                 <a href="{{ route('home', app()->getLocale()) }}" class="logo__link">
-                    <img src="{{ asset('assets/logo_white.svg') }}?v={{ time() }}" alt="">
+                    <img src="{{ asset('assets/m1-logo-light.svg') }}?v={{ time() }}" alt="">
                 </a>
                 <div id="nav_close" class="only-phone">{{ __('Close') }}</div>
             </div>

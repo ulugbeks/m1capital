@@ -191,7 +191,7 @@ input,
 textarea,
 select {
     width: 46vw;
-    margin-bottom: 52px;
+    margin-bottom: 25px;
     border: 1px solid #e1e1e1;
     height: 8vh;
     border-radius: 8px;
@@ -947,12 +947,12 @@ header {
 
 .nav__logo img,
 .footer__logo img {
-    width: 270px;
+    width: 210px;
 }
 
 @media (max-width: 768px) {
     .nav__logo img {
-        width: 170px!important;
+        width: 150px!important;
     }
 }
 
@@ -982,3 +982,4 @@ span.s1 {
     font-weight: 500;
     color: #777373;
 }
+

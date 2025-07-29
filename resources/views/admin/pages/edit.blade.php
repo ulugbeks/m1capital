@@ -550,7 +550,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Paragraphs</label>
                                     <textarea name="content[{{ $locale }}][info2][paragraphs]" 
                                               rows="6"
-                                              class="w-full border-gray-300 rounded-md shadow-sm">{{ old('content.'.$locale.'.info2.paragraphs', is_array($content['info2']['paragraphs'] ?? null) ? implode("\n\n", $content['info2']['paragraphs']) : ($content['info2']['paragraphs'] ?? '')) }}</textarea>
+                                              class="w-full border-gray-300 rounded-md shadow-sm tinymce">{{ old('content.'.$locale.'.info2.paragraphs', is_array($content['info2']['paragraphs'] ?? null) ? implode("\n\n", $content['info2']['paragraphs']) : ($content['info2']['paragraphs'] ?? '')) }}</textarea>
                                 </div>
                                 
                                 <!-- <div class="mb-4 p-4 bg-gray-50 rounded">
@@ -669,7 +669,7 @@
                                 </div>
                                 
                                 <!-- Form Labels -->
-                                <div class="mb-4 p-4 bg-gray-50 rounded">
+                                <div class="mb-4 p-4 bg-gray-50 rounded" style="display: none;">
                                     <h5 class="font-medium mb-2">Contact Form Labels</h5>
                                     
                                     @php

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +27,9 @@ Route::get('/', function () {
     return redirect()->route('home', ['locale' => config('app.locale', 'en')]);
 });
 
-// Redirect /login to admin login
-Route::get('/login', function () {
-    return redirect()->route('admin.login');
-});
+// Define the 'login' route that Laravel's auth middleware expects
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
 
 // Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
@@ -114,5 +114,32 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::post('/{locale}/contact/submit', [App\Http\Controllers\ContactController::class, 'submit'])
+    ->name('contact.submit');
+
+    //Contact form localization
+Route::group(['prefix' => '{locale}', 'where' => ['locale' => '[a-zA-Z]{2}']], function () {
+    Route::post('/contact/submit', [App\Http\Controllers\ContactController::class, 'submit'])
+        ->name('contact.submit');
+});
+
+
+// Storage fallback route
+Route::get('storage/{path}', function ($path) {
+    $path = storage_path('app/public/' . $path);
+    
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    
+    $file = File::get($path);
+    $type = File::mimeType($path);
+    
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    
+    return $response;
+})->where('path', '.*');
 
 // Удалена строка: require __DIR__.'/auth.php';
